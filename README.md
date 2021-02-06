@@ -1,7 +1,17 @@
-# cycle-image-gan
-Based on https://github.com/taoxugit/AttnGAN/tree/master/code
+# cycle-image-gan revision for Colab
 
-Paper https://arxiv.org/abs/2003.12137
+This is cycle-image-gan revised version for Google Colab.
+
+Refer to [https://github.com/suetAndTie/cycle-image-gan](https://github.com/suetAndTie/cycle-image-gan) for original source version, <br>
+it is implementation for the paper [Cycle Text-To-Image GAN with BERT](https://arxiv.org/abs/2003.12137).
+
+Refer to troubleshooting [issues](https://github.com/rightlit/cycle-image-gan-rev/issues) while running with original source code. 
+
+### Dependencies
+python 3.6
+
+Pytorch 1.7.0+cu101
+
 
 ## Spring 2019 CS 224U Project
 * BERT encoder
