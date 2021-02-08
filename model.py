@@ -16,6 +16,8 @@ from miscc.config import cfg
 from GlobalAttention import GlobalAttentionGeneral as ATT_NET
 from pytorch_pretrained_bert import BertModel
 
+# for cudnn error fix
+torch.backends.cudnn.enabled = False
 
 class Upsample(nn.Module):
     def __init__(self, size=None, scale_factor=None, mode='nearest', align_corners=None):
