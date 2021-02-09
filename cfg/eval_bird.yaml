@@ -12,10 +12,10 @@ TREE:
 
 TRAIN:
     FLAG: False
-    NET_G: 'models/bird_AttnGAN2.pth'
+    NET_G: 'models/netG_epoch_200.pth'
     B_NET_D: False
     BATCH_SIZE: 100
-    NET_E: 'DAMSMencoders/bird/text_encoder200.pth'
+    NET_E: 'STREAMencoders/bird/text_encoder200.pth'
 
 
 GAN:
