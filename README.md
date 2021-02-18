@@ -35,3 +35,8 @@ this bird has brown plumage and a white ring at the base of its long, curved bro
 ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_6_g0.png) ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_6_g1.png) ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_6_g2.png) | ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_7_g0.png) ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_7_g1.png) ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_7_g2.png)
 this bird is gray in color, with a large curved beak. | a large gray bird with a long wingspan and a long black beak.
 ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_8_g0.png) ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_8_g1.png) ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_8_g2.png) | ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_9_g0.png) ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_9_g1.png) ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_9_g2.png)
+
+
+**Reference**
+
+- [AttnGAN: Fine-Grained Text to Image Generation with Attentional Generative Adversarial Networks](https://arxiv.org/abs/1711.10485) [[code]](https://github.com/taoxugit/AttnGAN)
