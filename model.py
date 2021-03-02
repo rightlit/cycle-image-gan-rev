@@ -433,7 +433,8 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
 
         self.out = nn.Linear(self.num_directions * hidden_size, vocab_size)
 
-    def forward(self, x, captions):
+    #def forward(self, x, captions):
+    def forward(self, x, captions, input_ids, segment_ids, input_mask):
         # (bs x 17 x 17 x nef), (bs x nef)
         features, cnn_code = super().forward(x)
         # (bs x nef)
@@ -446,7 +447,8 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
 
         # bs x T x vocab_size
         # get last layer of bert encoder
-        text_embeddings, _ = self.encoder(captions, output_all_encoded_layers=False)
+        #text_embeddings, _ = self.encoder(captions, output_all_encoded_layers=False)
+        text_embeddings, _ = self.encoder(captions, output_all_encoded_layers=False, input_ids, segment_ids, input_mask)
         # bs x T x 768
         text_embeddings = self.bert_linear(text_embeddings)
         # bs x T x emb_size

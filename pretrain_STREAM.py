@@ -10,7 +10,7 @@ from miscc.utils import build_super_images
 from miscc.losses import sent_loss, words_loss, image_to_text_loss
 from miscc.config import cfg, cfg_from_file
 
-from datasets import TextDataset
+from datasets import TextDataset, TextBertDataset
 from datasets import prepare_data
 
 from model import BERT_RNN_ENCODER, BERT_CNN_ENCODER_RNN_DECODER
@@ -67,11 +67,13 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
         rnn_model.zero_grad()
         cnn_model.zero_grad()
 
-        imgs, captions, cap_lens, \
-            class_ids, keys = prepare_data(data)
+        #imgs, captions, cap_lens, class_ids, keys = prepare_data(data)
+        imgs, captions, cap_lens, class_ids, keys, \
+                input_ids, segment_ids, input_mask = prepare_data_bert(data)
 
         # sent_code: batch_size x nef
-        words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
+        #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
+        words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, input_ids, segment_ids, input_mask)
         # bs x T x vocab_size
 
         nef, att_sze = words_features.size(1), words_features.size(2)
@@ -80,7 +82,8 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
         hidden = rnn_model.init_hidden(batch_size)
         # words_emb: batch_size x nef x seq_len
         # sent_emb: batch_size x nef
-        words_emb, sent_emb = rnn_model(captions, cap_lens, hidden)
+        #words_emb, sent_emb = rnn_model(captions, cap_lens, hidden)
+        words_emb, sent_emb = rnn_model(captions, cap_lens, hidden, input_ids, segment_ids, input_mask)
 
         w_loss0, w_loss1, attn_maps = words_loss(words_features, words_emb, labels,
                                                  cap_lens, class_ids, batch_size)
@@ -260,9 +263,8 @@ if __name__ == "__main__":
         transforms.Scale(int(imsize * 76 / 64)),
         transforms.RandomCrop(imsize),
         transforms.RandomHorizontalFlip()])
-    dataset = TextDataset(cfg.DATA_DIR, 'train',
-                          base_size=cfg.TREE.BASE_SIZE,
-                          transform=image_transform)
+    #dataset = TextDataset(cfg.DATA_DIR, 'train', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
+    dataset = TextBertDataset(cfg.DATA_DIR, 'train', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
 
     print(dataset.n_words, dataset.embeddings_num)
     assert dataset
@@ -271,9 +273,8 @@ if __name__ == "__main__":
         shuffle=True, num_workers=int(cfg.WORKERS))
 
     # # validation data #
-    dataset_val = TextDataset(cfg.DATA_DIR, 'test',
-                              base_size=cfg.TREE.BASE_SIZE,
-                              transform=image_transform)
+    #dataset_val = TextDataset(cfg.DATA_DIR, 'test', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
+    dataset_val = TextBertDataset(cfg.DATA_DIR, 'test', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
     dataloader_val = torch.utils.data.DataLoader(
         dataset_val, batch_size=batch_size, drop_last=True,
         shuffle=True, num_workers=int(cfg.WORKERS))
