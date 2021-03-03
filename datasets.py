@@ -48,24 +48,6 @@ def prepare_data(data):
 def prepare_data_bert(data):
     imgs, captions, captions_lens, class_ids, keys = data
 
-    # make bert tokens
-    # input_ids, segment_ids, input_mask
-    input_ids = []
-    segment_ids = []
-    input_mask = []
-    max_seq_len = 512
-
-    for tokens in captions:
-        tokens = tokens[:(max_seq_length - 2)]
-        token_sequence = ['[CLS]'] + tokens + ['[SEP]']
-        segment = [0] * len(token_sequence)
-        sequence = self.tokenizer.convert_tokens_to_ids(token_sequence)
-        current_length = len(sequence)
-        padding_length = max_seq_length - current_length
-        input_ids.append(sequence + [0] * padding_length)
-        segment_ids.append(segment + [0] * padding_length)
-        input_mask.append([1] * current_length + [0] * padding_length)
-
     # sort data by the length in a decreasing order
     sorted_cap_lens, sorted_cap_indices = \
         torch.sort(captions_lens, 0, True)
@@ -83,6 +65,26 @@ def prepare_data_bert(data):
     # sent_indices = sent_indices[sorted_cap_indices]
     keys = [keys[i] for i in sorted_cap_indices.numpy()]
     # print('keys', type(keys), keys[-1])  # list
+
+    # added code
+    # make bert tokens
+    # input_ids, segment_ids, input_mask
+    input_ids = []
+    segment_ids = []
+    input_mask = []
+    max_seq_length = 512
+
+    for tokens in captions:
+        tokens = tokens[:(max_seq_length - 2)]
+        token_sequence = ['[CLS]'] + tokens + ['[SEP]']
+        segment = [0] * len(token_sequence)
+        sequence = self.tokenizer.convert_tokens_to_ids(token_sequence)
+        current_length = len(sequence)
+        padding_length = max_seq_length - current_length
+        input_ids.append(sequence + [0] * padding_length)
+        segment_ids.append(segment + [0] * padding_length)
+        input_mask.append([1] * current_length + [0] * padding_length)
+
     if cfg.CUDA:
         captions = Variable(captions).cuda()
         sorted_cap_lens = Variable(sorted_cap_lens).cuda()
