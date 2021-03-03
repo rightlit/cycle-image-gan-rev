@@ -214,7 +214,8 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         # self.decoder.weight.data.uniform_(-initrange, initrange)
         # self.decoder.bias.data.fill_(0)
 
-    def forward(self, captions, cap_lens, hidden, mask=None):
+    def forward(self, captions, cap_lens, hidden, input_ids, segment_ids, input_mask):
+    #def forward(self, captions, cap_lens, hidden, mask=None):
         # input: torch.LongTensor of size batch x n_steps
         # --> emb: batch x n_steps x ninput
         emb, _ = self.encoder(captions, output_all_encoded_layers=False)
@@ -448,7 +449,7 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         # bs x T x vocab_size
         # get last layer of bert encoder
         #text_embeddings, _ = self.encoder(captions, output_all_encoded_layers=False)
-        text_embeddings, _ = self.encoder(captions, output_all_encoded_layers=False, input_ids, segment_ids, input_mask)
+        text_embeddings, _ = self.encoder(input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
         # bs x T x 768
         text_embeddings = self.bert_linear(text_embeddings)
         # bs x T x emb_size
