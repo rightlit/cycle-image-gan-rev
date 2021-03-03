@@ -11,7 +11,7 @@ from miscc.losses import sent_loss, words_loss, image_to_text_loss
 from miscc.config import cfg, cfg_from_file
 
 from datasets import TextDataset, TextBertDataset
-from datasets import prepare_data
+from datasets import prepare_data, prepare_data_bert
 
 from model import BERT_RNN_ENCODER, BERT_CNN_ENCODER_RNN_DECODER
 

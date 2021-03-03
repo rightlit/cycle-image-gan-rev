@@ -14,7 +14,7 @@ from miscc.utils import mkdir_p
 from miscc.utils import build_super_images, build_super_images2
 from miscc.utils import weights_init, load_params, copy_G_params
 from model import G_DCGAN, G_NET
-from datasets import prepare_data
+from datasets import prepare_data, prepare_data_bert
 from model import RNN_ENCODER, CNN_ENCODER, CNN_ENCODER_RNN_DECODER, \
     BERT_CNN_ENCODER_RNN_DECODER, BERT_RNN_ENCODER
 
