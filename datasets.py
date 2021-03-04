@@ -85,7 +85,7 @@ def prepare_data_bert(data):
         #current_length = len(sequence)
         current_length = len(token_sequence)
         padding_length = max_seq_length - current_length
-        input_ids.append(sequence + [0] * padding_length)
+        input_ids.append(token_sequence + [0] * padding_length)
         segment_ids.append(segment + [0] * padding_length)
         input_mask.append([1] * current_length + [0] * padding_length)
 
