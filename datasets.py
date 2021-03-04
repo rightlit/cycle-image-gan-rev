@@ -74,10 +74,12 @@ def prepare_data_bert(data):
     input_mask = []
     max_seq_length = 512
 
+    print(captions[:10])
     for tokens in captions:
-        #print(tokens)
+        print(tokens)
         tokens = tokens[:(max_seq_length - 2)]
-        token_sequence = ['[CLS]'] + tokens + ['[SEP]']
+        #token_sequence = ['[CLS]'] + tokens + ['[SEP]']
+        token_sequence = ['[CLS]'] + list(tokens) + ['[SEP]']
         segment = [0] * len(token_sequence)
         sequence = self.tokenizer.convert_tokens_to_ids(token_sequence)
         current_length = len(sequence)
