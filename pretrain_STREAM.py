@@ -33,6 +33,8 @@ from torch.autograd import Variable
 import torch.backends.cudnn as cudnn
 import torchvision.transforms as transforms
 
+from pytorch_pretrained_bert import BertTokenizer
+
 
 dir_path = (os.path.abspath(os.path.join(os.path.realpath(__file__), './.')))
 sys.path.append(dir_path)
@@ -62,6 +64,9 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
     t_total_loss = 0
     count = (epoch + 1) * len(dataloader)
     start_time = time.time()
+
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+
     for step, data in enumerate(dataloader, 0):
         # print('step', step)
         rnn_model.zero_grad()
@@ -69,7 +74,7 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
 
         #imgs, captions, cap_lens, class_ids, keys = prepare_data(data)
         imgs, captions, cap_lens, class_ids, keys, \
-                input_ids, segment_ids, input_mask = prepare_data_bert(data)
+                input_ids, segment_ids, input_mask = prepare_data_bert(data, tokenizer)
 
         # sent_code: batch_size x nef
         #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
