@@ -48,24 +48,6 @@ def prepare_data(data):
 def prepare_data_bert(data):
     imgs, captions, captions_lens, class_ids, keys = data
 
-    # sort data by the length in a decreasing order
-    sorted_cap_lens, sorted_cap_indices = \
-        torch.sort(captions_lens, 0, True)
-
-    real_imgs = []
-    for i in range(len(imgs)):
-        imgs[i] = imgs[i][sorted_cap_indices]
-        if cfg.CUDA:
-            real_imgs.append(Variable(imgs[i]).cuda())
-        else:
-            real_imgs.append(Variable(imgs[i]))
-
-    captions = captions[sorted_cap_indices].squeeze()
-    class_ids = class_ids[sorted_cap_indices].numpy()
-    # sent_indices = sent_indices[sorted_cap_indices]
-    keys = [keys[i] for i in sorted_cap_indices.numpy()]
-    # print('keys', type(keys), keys[-1])  # list
-
     # added code
     # make bert tokens
     # input_ids, segment_ids, input_mask
@@ -85,9 +67,36 @@ def prepare_data_bert(data):
         segment_ids.append(segment + [0] * padding_length)
         input_mask.append([1] * current_length + [0] * padding_length)
 
+    # sort data by the length in a decreasing order
+    sorted_cap_lens, sorted_cap_indices = \
+        torch.sort(captions_lens, 0, True)
+
+    real_imgs = []
+    for i in range(len(imgs)):
+        imgs[i] = imgs[i][sorted_cap_indices]
+        if cfg.CUDA:
+            real_imgs.append(Variable(imgs[i]).cuda())
+        else:
+            real_imgs.append(Variable(imgs[i]))
+
+    captions = captions[sorted_cap_indices].squeeze()
+    class_ids = class_ids[sorted_cap_indices].numpy()
+    # sent_indices = sent_indices[sorted_cap_indices]
+    keys = [keys[i] for i in sorted_cap_indices.numpy()]
+    # print('keys', type(keys), keys[-1])  # list
+
+    # added code
+    input_ids = input_ids[sorted_cap_indices].numpy()
+    segment_ids = segment_ids[sorted_cap_indices].numpy()
+    input_mask = input_mask[sorted_cap_indices].numpy()
+
     if cfg.CUDA:
         captions = Variable(captions).cuda()
         sorted_cap_lens = Variable(sorted_cap_lens).cuda()
+        # added code
+        input_ids = Variable(input_ids).cuda()
+        segment_ids = Variable(segment_ids).cuda()
+        input_mask = Variable(input_mask).cuda()
     else:
         captions = Variable(captions)
         sorted_cap_lens = Variable(sorted_cap_lens)
