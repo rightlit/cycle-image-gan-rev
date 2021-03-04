@@ -45,7 +45,7 @@ def prepare_data(data):
     return [real_imgs, captions, sorted_cap_lens,
             class_ids, keys]
 
-def prepare_data_bert(data):
+def prepare_data_bert(data, tokenizer):
     imgs, captions, captions_lens, class_ids, keys = data
 
     # sort data by the length in a decreasing order
@@ -78,8 +78,12 @@ def prepare_data_bert(data):
     for tokens in captions:
         print(tokens)
         tokens = tokens[:(max_seq_length - 2)]
-        #token_sequence = ['[CLS]'] + tokens + ['[SEP]']
-        token_sequence = ['[CLS]'] + list(tokens) + ['[SEP]']
+        #token_sequence = cls_token_ids + list(tokens) + sep_token_ids
+        token_sequence = []
+        token_sequence.extend(tokenizer.convert_tokens_to_ids(['[CLS]']))
+        token_sequence.extend(tokens.numpy())
+        token_sequence.extend(tokenizer.convert_tokens_to_ids(['[SEP]']))
+
         segment = [0] * len(token_sequence)
         #sequence = self.tokenizer.convert_tokens_to_ids(token_sequence)
         #current_length = len(sequence)
