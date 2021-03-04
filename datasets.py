@@ -98,9 +98,9 @@ def prepare_data_bert(data):
         captions = Variable(captions).cuda()
         sorted_cap_lens = Variable(sorted_cap_lens).cuda()
         # added code
-        input_ids = Variable(input_ids).cuda()
-        segment_ids = Variable(segment_ids).cuda()
-        input_mask = Variable(input_mask).cuda()
+        input_ids = torch.LongTensor(input_ids).cuda()
+        segment_ids = torch.LongTensor(segment_ids).cuda()
+        input_mask = torch.LongTensor(input_mask).cuda()
     else:
         captions = Variable(captions)
         sorted_cap_lens = Variable(sorted_cap_lens)
