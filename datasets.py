@@ -81,8 +81,9 @@ def prepare_data_bert(data):
         #token_sequence = ['[CLS]'] + tokens + ['[SEP]']
         token_sequence = ['[CLS]'] + list(tokens) + ['[SEP]']
         segment = [0] * len(token_sequence)
-        sequence = self.tokenizer.convert_tokens_to_ids(token_sequence)
-        current_length = len(sequence)
+        #sequence = self.tokenizer.convert_tokens_to_ids(token_sequence)
+        #current_length = len(sequence)
+        current_length = len(token_sequence)
         padding_length = max_seq_length - current_length
         input_ids.append(sequence + [0] * padding_length)
         segment_ids.append(segment + [0] * padding_length)
