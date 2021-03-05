@@ -100,9 +100,9 @@ def prepare_data_bert(data, tokenizer):
     segment_ids = torch.LongTensor(segment_ids)
     input_mask = torch.LongTensor(input_mask)
 
-    input_ids = input_ids[sorted_cap_indices].numpy()
-    segment_ids = segment_ids[sorted_cap_indices].numpy()
-    input_mask = input_mask[sorted_cap_indices].numpy()
+    input_ids = input_ids[sorted_cap_indices]
+    segment_ids = segment_ids[sorted_cap_indices]
+    input_mask = input_mask[sorted_cap_indices]
 
     if cfg.CUDA:
         captions = Variable(captions).cuda()
