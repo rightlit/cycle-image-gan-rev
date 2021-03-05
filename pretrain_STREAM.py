@@ -101,8 +101,9 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
         loss += s_loss0 + s_loss1
         s_total_loss0 += s_loss0.data
         s_total_loss1 += s_loss1.data
-        #
 
+        # added code
+        print(word_digits.shape, captions.shape)
         t_loss = image_to_text_loss(word_logits, captions)
         loss += t_loss
         t_total_loss += t_loss.data
