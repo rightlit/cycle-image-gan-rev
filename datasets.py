@@ -55,9 +55,10 @@ def prepare_data_bert(data, tokenizer):
     segment_ids = []
     input_mask = []
     max_seq_length = cfg.TEXT.WORDS_NUM
+    caps = captions.squeeze()
 
-    print(captions[:10])
-    for tokens in captions:
+    print(caps[:10])
+    for tokens in caps:
         print(tokens)
         tokens = tokens[:(max_seq_length - 2)]
         #token_sequence = cls_token_ids + list(tokens) + sep_token_ids
