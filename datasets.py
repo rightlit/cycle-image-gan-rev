@@ -72,7 +72,7 @@ def prepare_data_bert(data, tokenizer):
     input_ids = []
     segment_ids = []
     input_mask = []
-    max_seq_length = 512
+    max_seq_length = cfg.TEXT.WORDS_NUM
 
     print(captions[:10])
     for tokens in captions:
