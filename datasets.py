@@ -48,7 +48,7 @@ def prepare_data(data):
 def prepare_data_bert(data, tokenizer):
     imgs, captions, captions_lens, class_ids, keys = data
 
-'''
+    '''
     # added code
     # make bert tokens
     # input_ids, segment_ids, input_mask
@@ -76,7 +76,7 @@ def prepare_data_bert(data, tokenizer):
         input_ids.append(token_sequence + [0] * padding_length)
         segment_ids.append(segment + [0] * padding_length)
         input_mask.append([1] * current_length + [0] * padding_length)
-'''
+    '''
 
     # sort data by the length in a decreasing order
     sorted_cap_lens, sorted_cap_indices = \
@@ -96,7 +96,7 @@ def prepare_data_bert(data, tokenizer):
     keys = [keys[i] for i in sorted_cap_indices.numpy()]
     # print('keys', type(keys), keys[-1])  # list
 
-'''
+    '''
     # added code
     input_ids = torch.LongTensor(input_ids)
     segment_ids = torch.LongTensor(segment_ids)
@@ -105,12 +105,12 @@ def prepare_data_bert(data, tokenizer):
     input_ids = input_ids[sorted_cap_indices]
     segment_ids = segment_ids[sorted_cap_indices]
     input_mask = input_mask[sorted_cap_indices]
-'''
+    '''
 
     if cfg.CUDA:
         captions = Variable(captions).cuda()
         sorted_cap_lens = Variable(sorted_cap_lens).cuda()
-        
+
         '''
         # added code
         input_ids = Variable(input_ids).cuda()
@@ -121,9 +121,10 @@ def prepare_data_bert(data, tokenizer):
         captions = Variable(captions)
         sorted_cap_lens = Variable(sorted_cap_lens)
 
-    return [real_imgs, captions, sorted_cap_lens,
-            class_ids, keys, input_ids, segment_ids, input_mask]
-
+    #return [real_imgs, captions, sorted_cap_lens, 
+    #        class_ids, keys, input_ids, segment_ids, input_mask]
+    return [real_imgs, captions, sorted_cap_lens, 
+            class_ids, keys]
 
 def get_imgs(img_path, imsize, bbox=None,
              transform=None, normalize=None):

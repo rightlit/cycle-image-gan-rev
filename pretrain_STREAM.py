@@ -73,12 +73,13 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
         cnn_model.zero_grad()
 
         #imgs, captions, cap_lens, class_ids, keys = prepare_data(data)
-        imgs, captions, cap_lens, class_ids, keys, \
-                input_ids, segment_ids, input_mask = prepare_data_bert(data, tokenizer)
+        imgs, captions, cap_lens, class_ids, keys = prepare_data_bert(data, tokenizer)
+        #imgs, captions, cap_lens, class_ids, keys, \
+        #        input_ids, segment_ids, input_mask = prepare_data_bert(data, tokenizer)
 
         # sent_code: batch_size x nef
-        #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
-        words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, input_ids, segment_ids, input_mask)
+        words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
+        #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, input_ids, segment_ids, input_mask)
         # bs x T x vocab_size
 
         nef, att_sze = words_features.size(1), words_features.size(2)
@@ -87,8 +88,8 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
         hidden = rnn_model.init_hidden(batch_size)
         # words_emb: batch_size x nef x seq_len
         # sent_emb: batch_size x nef
-        #words_emb, sent_emb = rnn_model(captions, cap_lens, hidden)
-        words_emb, sent_emb = rnn_model(captions, cap_lens, hidden, input_ids, segment_ids, input_mask)
+        words_emb, sent_emb = rnn_model(captions, cap_lens, hidden)
+        #words_emb, sent_emb = rnn_model(captions, cap_lens, hidden, input_ids, segment_ids, input_mask)
 
         w_loss0, w_loss1, attn_maps = words_loss(words_features, words_emb, labels,
                                                  cap_lens, class_ids, batch_size)
