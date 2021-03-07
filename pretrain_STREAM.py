@@ -34,7 +34,7 @@ import torch.backends.cudnn as cudnn
 import torchvision.transforms as transforms
 
 from pytorch_pretrained_bert import BertTokenizer
-
+import pickle
 
 dir_path = (os.path.abspath(os.path.join(os.path.realpath(__file__), './.')))
 sys.path.append(dir_path)
