@@ -81,6 +81,8 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
         words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
         #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, input_ids, segment_ids, input_mask)
         # bs x T x vocab_size
+        with open('./debug1.pkl', 'wb') as f:
+            pickle.dump({'words_features':words_features, 'sent_code':sent_code, 'word_logits':word_logits}, f)  
 
         nef, att_sze = words_features.size(1), words_features.size(2)
         # words_features = words_features.view(batch_size, nef, -1)
@@ -93,12 +95,18 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
 
         w_loss0, w_loss1, attn_maps = words_loss(words_features, words_emb, labels,
                                                  cap_lens, class_ids, batch_size)
+        with open('./debug2.pkl', 'wb') as f:
+            pickle.dump({'words_features':words_features, 'words_emb':words_emb, 'labels':labels, 'cap_lens':cap_lens, 'class_ids':class_ids, 'batch_size':batch_size}, f)  
+
         w_total_loss0 += w_loss0.data
         w_total_loss1 += w_loss1.data
         loss = w_loss0 + w_loss1
 
         s_loss0, s_loss1 = \
             sent_loss(sent_code, sent_emb, labels, class_ids, batch_size)
+        with open('./debug3.pkl', 'wb') as f:
+            pickle.dump({'sent_code':sent_code, 'sent_emb':sent_emb, 'labels':labels, 'class_ids':class_ids, 'batch_size':batch_size}, f)  
+
         loss += s_loss0 + s_loss1
         s_total_loss0 += s_loss0.data
         s_total_loss1 += s_loss1.data
@@ -106,6 +114,9 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
         # added code
         print(word_logits.shape, captions.shape)
         t_loss = image_to_text_loss(word_logits, captions)
+        with open('./debug4.pkl', 'wb') as f:
+            pickle.dump({'word_logits':word_logits, 'captions':captions}, f)  
+
         loss += t_loss
         t_total_loss += t_loss.data
 
