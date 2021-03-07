@@ -39,7 +39,6 @@ import pickle
 dir_path = (os.path.abspath(os.path.join(os.path.realpath(__file__), './.')))
 sys.path.append(dir_path)
 
-
 UPDATE_INTERVAL = 200
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a STREAM network')
