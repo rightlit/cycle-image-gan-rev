@@ -118,7 +118,7 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
         s_total_loss1 += s_loss1.data
 
         # added code
-        print(word_logits.shape, captions.shape)
+        #print(word_logits.shape, captions.shape)
         t_loss = image_to_text_loss(word_logits, captions)
         if(debug_flag):
             with open('./debug4.pkl', 'wb') as f:
@@ -214,8 +214,9 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
 def build_models():
   
     # build model ############################################################
-    # len(tokenizer.vocab)
-    vocab_size = 30522
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    vocab_size = len(tokenizer.vocab)
+    #vocab_size = 30522
 
     #text_encoder = BERT_RNN_ENCODER(dataset.n_words, nhidden=cfg.TEXT.EMBEDDING_DIM)
     #image_encoder = BERT_CNN_ENCODER_RNN_DECODER(cfg.TEXT.EMBEDDING_DIM, cfg.CNN_RNN.HIDDEN_DIM, dataset.n_words, rec_unit=cfg.RNN_TYPE)
