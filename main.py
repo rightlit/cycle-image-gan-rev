@@ -17,6 +17,8 @@ import numpy as np
 import torch
 import torchvision.transforms as transforms
 
+from pytorch_pretrained_bert import BertTokenizer
+
 dir_path = (os.path.abspath(os.path.join(os.path.realpath(__file__), './.')))
 sys.path.append(dir_path)
 
@@ -127,17 +129,21 @@ if __name__ == "__main__":
         transforms.Scale(int(imsize * 76 / 64)),
         transforms.RandomCrop(imsize),
         transforms.RandomHorizontalFlip()])
-    dataset = TextDataset(cfg.DATA_DIR, split_dir,
-                          base_size=cfg.TREE.BASE_SIZE,
-                          transform=image_transform)
+    #dataset = TextDataset(cfg.DATA_DIR, split_dir, base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
+    dataset = TextBertDataset(cfg.DATA_DIR, split_dir, base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
     assert dataset
     dataloader = torch.utils.data.DataLoader(
         dataset, batch_size=cfg.TRAIN.BATCH_SIZE,
         drop_last=True, shuffle=bshuffle, num_workers=int(cfg.WORKERS))
 
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    vocab_size = len(tokenizer.vocab)
+    #vocab_size = 30522
+
     # Define models and go to train/evaluate
     trainer_ = getattr(trainer, cfg.TRAIN.TRAINER)
-    algo = trainer_(output_dir, dataloader, dataset.n_words, dataset.ixtoword)
+    #algo = trainer_(output_dir, dataloader, dataset.n_words, dataset.ixtoword)
+    algo = trainer_(output_dir, dataloader, vocab_size, dataset.ixtoword)
 
     start_t = time.time()
     if cfg.TRAIN.FLAG:
