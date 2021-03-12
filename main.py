@@ -1,7 +1,7 @@
 from __future__ import print_function
 
 from miscc.config import cfg, cfg_from_file
-from datasets import TextDataset
+from datasets import TextDataset, TextBertDataset
 import trainer
 
 import os
