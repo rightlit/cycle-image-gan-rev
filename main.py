@@ -37,7 +37,11 @@ def parse_args():
 
 def gen_example(wordtoix, algo):
     '''generate images from example sentences'''
+
     from nltk.tokenize import RegexpTokenizer
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+
+
     filepath = '%s/example_filenames.txt' % (cfg.DATA_DIR)
     data_dic = {}
     with open(filepath, "r") as f:
@@ -59,7 +63,8 @@ def gen_example(wordtoix, algo):
                     if len(sent) == 0:
                         continue
                     sent = sent.replace("\ufffd\ufffd", " ")
-                    tokenizer = RegexpTokenizer(r'\w+')
+                    #tokenizer = RegexpTokenizer(r'\w+')
+                    #tokens = tokenizer.tokenize(sent.lower())
                     tokens = tokenizer.tokenize(sent.lower())
                     if len(tokens) == 0:
                         print('sent', sent)
