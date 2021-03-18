@@ -36,19 +36,6 @@ this bird has brown plumage and a white ring at the base of its long, curved bro
 this bird is gray in color, with a large curved beak. | a large gray bird with a long wingspan and a long black beak.
 ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_8_g0.png) ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_8_g1.png) ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_8_g2.png) | ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_9_g0.png) ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_9_g1.png) ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_9_g2.png)
 
-flower example              |  flower example
-:-------------------------:|:-------------------------:
-the petals of the flower are pink in color and have a yellow center. | this flower is pink and white in color, with petals that are multi colored.
-![](models/netG_epoch_600/image_06734/0_s_0_g0.png) ![](models/netG_epoch_600/image_06734/0_s_0_g1.png) ![](models/netG_epoch_600/image_06734/0_s_0_g2.png) | ![](models/netG_epoch_600/image_06734/0_s_1_g0.png) ![](models/netG_epoch_600/image_06734/0_s_1_g1.png) ![](models/netG_epoch_600/image_06734/0_s_1_g2.png)
-the geographical shapes of the bright purple petals set off the orange stamen and filament and the cross shaped stigma is beautiful. | the purple petals have shades of white with white anther and filament
-![](models/netG_epoch_600/image_06734/0_s_2_g0.png) ![](models/netG_epoch_600/image_06734/0_s_2_g1.png) ![](models/netG_epoch_600/image_06734/0_s_2_g2.png) | ![](models/netG_epoch_600/image_06734/0_s_3_g0.png) ![](models/netG_epoch_600/image_06734/0_s_3_g1.png) ![](models/netG_epoch_600/image_06734/0_s_3_g2.png)
-this flower has large pink petals and a white stigma in the center | this flower has petals that are pink and has a yellow stamen
-![](models/netG_epoch_600/image_06734/0_s_4_g0.png) ![](models/netG_epoch_600/image_06734/0_s_4_g1.png) ![](models/netG_epoch_600/image_06734/0_s_4_g2.png) | ![](models/netG_epoch_600/image_06734/0_s_5_g0.png) ![](models/netG_epoch_600/image_06734/0_s_5_g1.png) ![](models/netG_epoch_600/image_06734/0_s_5_g2.png)
-a flower with short and wide petals that is light purple. | this flower has small pink petals with a yellow center.
-![](models/netG_epoch_600/image_06734/0_s_6_g0.png) ![](models/netG_epoch_600/image_06734/0_s_6_g1.png) ![](models/netG_epoch_600/image_06734/0_s_6_g2.png) | ![](models/netG_epoch_600/image_06734/0_s_7_g0.png) ![](models/netG_epoch_600/image_06734/0_s_7_g1.png) ![](models/netG_epoch_600/image_06734/0_s_7_g2.png)
-this flower has large rounded pink petals with curved edges and purple veins. | this flower has purple petals as well as a white stamen.
-![](models/netG_epoch_600/image_06734/0_s_8_g0.png) ![](models/netG_epoch_600/image_06734/0_s_8_g1.png) ![](models/netG_epoch_600/image_06734/0_s_8_g2.png) | ![](models/netG_epoch_600/image_06734/0_s_9_g0.png) ![](models/netG_epoch_600/image_06734/0_s_9_g1.png) ![](models/netG_epoch_600/image_06734/0_s_9_g2.png)
-
 
 **Reference**
 
