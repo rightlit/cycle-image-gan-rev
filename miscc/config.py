@@ -21,7 +21,7 @@ __C.RNN_TYPE = 'LSTM'   # 'GRU'
 __C.B_VALIDATION = False
 
 # added code
-__C.VOCAB_FILE = './models/birds_vocab.txt'
+__C.LOCAL_PRETRAINED = True
 
 __C.TREE = edict()
 __C.TREE.BRANCH_NUM = 3
@@ -69,7 +69,10 @@ __C.TEXT.CAPTIONS_PER_IMAGE = 10
 __C.TEXT.EMBEDDING_DIM = 256
 __C.TEXT.WORDS_NUM = 18
 
-__C.TEXT.WORDS_NUM = 18
+# added code
+__C.BERT_ENCODER.VOCAB = './models/vocab.txt'
+__C.BERT_ENCODER.MODEL = './models/model_steps_9386.pt'
+
 
 def _merge_a_into_b(a, b):
     """Merge config dictionary a into config dictionary b, clobbering the

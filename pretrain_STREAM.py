@@ -64,8 +64,10 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
     count = (epoch + 1) * len(dataloader)
     start_time = time.time()
 
-    #tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    tokenizer = tokenization.FullTokenizer(vocab_file=cfg.vocab_file, do_lower_case=True)
+    if(cfg.LOCAL_PRETRAINED):
+        tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
+    else:
+        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     debug_flag = False
 
     for step, data in enumerate(dataloader, 0):
@@ -215,8 +217,10 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
 def build_models():
   
     # build model ############################################################
-    #tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    tokenizer = tokenization.FullTokenizer(vocab_file=cfg.vocab_file, do_lower_case=True)
+    if(cfg.LOCAL_PRETRAINED):
+        tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
+    else:
+        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     vocab_size = len(tokenizer.vocab)
     #vocab_size = 30522
 

@@ -4,7 +4,7 @@ DATASET_NAME: 'birds'
 DATA_DIR: 'data/birds'
 GPU_ID: 0
 WORKERS: 4
-
+LOCAL_PRETRAINED: True
 
 TREE:
     BRANCH_NUM: 1
@@ -31,3 +31,7 @@ TEXT:
     EMBEDDING_DIM: 768
     CAPTIONS_PER_IMAGE: 10
     WORDS_NUM: 18
+
+BERT_ENCODER:
+    VOCAB: './models/vocab.txt'
+    MODEL: './models/model_steps_9386.pt'
