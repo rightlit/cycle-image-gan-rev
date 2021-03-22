@@ -20,6 +20,9 @@ __C.WORKERS = 6
 __C.RNN_TYPE = 'LSTM'   # 'GRU'
 __C.B_VALIDATION = False
 
+# added code
+__C.VOCAB_FILE = './data/birds_vocab.txt'
+
 __C.TREE = edict()
 __C.TREE.BRANCH_NUM = 3
 __C.TREE.BASE_SIZE = 64
@@ -66,6 +69,7 @@ __C.TEXT.CAPTIONS_PER_IMAGE = 10
 __C.TEXT.EMBEDDING_DIM = 256
 __C.TEXT.WORDS_NUM = 18
 
+__C.TEXT.WORDS_NUM = 18
 
 def _merge_a_into_b(a, b):
     """Merge config dictionary a into config dictionary b, clobbering the

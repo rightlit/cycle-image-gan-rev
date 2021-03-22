@@ -14,6 +14,7 @@ from nltk.tokenize import RegexpTokenizer
 from pytorch_pretrained_bert import BertTokenizer
 from PIL import Image
 
+import tokenization
 
 def prepare_data(data):
     imgs, captions, captions_lens, class_ids, keys = data
@@ -427,7 +428,8 @@ class TextBertDataset(TextDataset):
     Text dataset on Bert
     https://github.com/huggingface/pytorch-pretrained-BERT
     """
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    #tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    tokenizer = tokenization.FullTokenizer(vocab_file=vocab, do_lower_case=True)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        # Load pre-trained model tokenizer (vocabulary)
 
