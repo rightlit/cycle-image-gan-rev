@@ -21,7 +21,7 @@ __C.RNN_TYPE = 'LSTM'   # 'GRU'
 __C.B_VALIDATION = False
 
 # added code
-__C.VOCAB_FILE = './data/birds_vocab.txt'
+__C.VOCAB_FILE = './models/birds_vocab.txt'
 
 __C.TREE = edict()
 __C.TREE.BRANCH_NUM = 3
