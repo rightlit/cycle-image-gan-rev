@@ -16,6 +16,7 @@ from miscc.config import cfg
 from GlobalAttention import GlobalAttentionGeneral as ATT_NET
 from pytorch_pretrained_bert import BertModel
 
+import pytorchic_models
 # for cudnn error fix
 torch.backends.cudnn.enabled = False
 
@@ -24,7 +25,7 @@ class LocalPretrainedBert(nn.Module):
     """ Classifier with Transformer """
     def __init__(self, bert_cfg):
         super().__init__()
-        self.transformer = models.Transformer(bert_cfg)
+        self.transformer = pytorchic_models.Transformer(bert_cfg)
         self.fc = nn.Linear(bert_cfg.dim, bert_cfg.dim)
         self.activ = nn.Tanh()
         self.drop = nn.Dropout(bert_cfg.p_drop_hidden)
