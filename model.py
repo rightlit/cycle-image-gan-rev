@@ -521,7 +521,7 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         input_mask = Variable(input_mask).cuda()
 
         #text_embeddings, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
-        text_embeddings, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
+        text_embeddings, _ = self.encoder(captions, input_ids, segment_ids, input_mask)
 
         # bs x T x 768
         text_embeddings = self.bert_linear(text_embeddings)
