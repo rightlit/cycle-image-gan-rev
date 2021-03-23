@@ -16,9 +16,10 @@ from miscc.config import cfg
 from GlobalAttention import GlobalAttentionGeneral as ATT_NET
 from pytorch_pretrained_bert import BertModel
 
-import pytorchic_models
 # for cudnn error fix
 torch.backends.cudnn.enabled = False
+import pytorchic_models
+import numpy as np
 
 # added code
 class LocalPretrainedBert(nn.Module):
@@ -243,15 +244,23 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         #emb, _ = self.encoder(captions, output_all_encoded_layers=False)
 
         # manipulation for BERT
-        input_ids = captions
+        input_ids = captions.tolist()
         # token type ids for tokens_a, tokens_b
-        segment_ids = [0]*len(captions) 
-        input_mask = [1]*(len(captions))
+        segment_ids = [0]*len(input_ids) 
+        input_mask = [1]*(len(input_ids))
         # zero padding for BERT
         n_pad = cfg.TEXT.WORDS_NUM - len(input_ids)
         input_ids.extend([0]*n_pad)
         segment_ids.extend([0]*n_pad)
         input_mask.extend([0]*n_pad)
+
+        input_ids = torch.LongTensor(input_ids)
+        segment_ids = torch.LongTensor(segment_ids)
+        input_mask = torch.LongTensor(input_mask)
+
+        input_ids = Variable(input_ids).cuda()
+        segment_ids = Variable(segment_ids).cuda()
+        input_mask = Variable(input_mask).cuda()
         emb, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
 
         emb = self.bert_linear(emb)
@@ -492,15 +501,24 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         #text_embeddings, _ = self.encoder(captions, output_all_encoded_layers=False)
 
         # manipulation for BERT
-        input_ids = captions
+        input_ids = captions.tolist()
         # token type ids for tokens_a, tokens_b
-        segment_ids = [0]*len(captions) 
-        input_mask = [1]*(len(captions))
+        segment_ids = [0]*len(input_ids) 
+        input_mask = [1]*(len(input_ids))
         # zero padding for BERT
         n_pad = cfg.TEXT.WORDS_NUM - len(input_ids)
         input_ids.extend([0]*n_pad)
         segment_ids.extend([0]*n_pad)
         input_mask.extend([0]*n_pad)
+
+        input_ids = torch.LongTensor(input_ids)
+        segment_ids = torch.LongTensor(segment_ids)
+        input_mask = torch.LongTensor(input_mask)
+
+        input_ids = Variable(input_ids).cuda()
+        segment_ids = Variable(segment_ids).cuda()
+        input_mask = Variable(input_mask).cuda()
+
         text_embeddings, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
 
         # bs x T x 768
