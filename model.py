@@ -239,8 +239,20 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
     def forward(self, captions, cap_lens, hidden, mask=None):
         # input: torch.LongTensor of size batch x n_steps
         # --> emb: batch x n_steps x ninput
-        emb, _ = self.encoder(captions, output_all_encoded_layers=False)
-        #emb, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
+        #emb, _ = self.encoder(captions, output_all_encoded_layers=False)
+
+        # manipulation for BERT
+        input_ids = captions
+        # token type ids for tokens_a, tokens_b
+        segment_ids = [0]*len(captions) 
+        input_mask = [1]*(len(captions))
+        # zero padding for BERT
+        n_pad = cfg.TEXT.WORDS_NUM - len(input_ids)
+        input_ids.extend([0]*n_pad)
+        segment_ids.extend([0]*n_pad)
+        input_mask.extend([0]*n_pad)
+        emb, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
+
         emb = self.bert_linear(emb)
         emb = self.drop(emb)
         #
@@ -476,8 +488,20 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
 
         # bs x T x vocab_size
         # get last layer of bert encoder
-        text_embeddings, _ = self.encoder(captions, output_all_encoded_layers=False)
-        #text_embeddings, _ = self.encoder(input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
+        #text_embeddings, _ = self.encoder(captions, output_all_encoded_layers=False)
+
+        # manipulation for BERT
+        input_ids = captions
+        # token type ids for tokens_a, tokens_b
+        segment_ids = [0]*len(captions) 
+        input_mask = [1]*(len(captions))
+        # zero padding for BERT
+        n_pad = cfg.TEXT.WORDS_NUM - len(input_ids)
+        input_ids.extend([0]*n_pad)
+        segment_ids.extend([0]*n_pad)
+        input_mask.extend([0]*n_pad)
+        text_embeddings, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
+
         # bs x T x 768
         text_embeddings = self.bert_linear(text_embeddings)
         # bs x T x emb_size
