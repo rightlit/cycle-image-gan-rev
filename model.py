@@ -488,7 +488,8 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
 
         self.out = nn.Linear(self.num_directions * hidden_size, vocab_size)
 
-    def forward(self, x, captions):
+    #def forward(self, x, captions):
+    def forward(self, x, captions, cap_lens):
     #def forward(self, x, captions, input_ids, segment_ids, input_mask):
         # (bs x 17 x 17 x nef), (bs x nef)
         features, cnn_code = super().forward(x)
