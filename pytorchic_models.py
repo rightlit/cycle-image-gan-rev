@@ -12,7 +12,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from utils import split_last, merge_last
+from pytorchic_utils import split_last, merge_last
 
 
 class Config(NamedTuple):
