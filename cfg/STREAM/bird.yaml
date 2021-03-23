@@ -35,3 +35,5 @@ TEXT:
 BERT_ENCODER:
     VOCAB: './models/vocab.txt'
     MODEL: './models/model_steps_9386.pt'
+    HIDDEN_DIM: 768
+    P_DROP_HIDDEN: 0.1
