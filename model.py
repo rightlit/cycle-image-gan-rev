@@ -245,14 +245,17 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
 
         # manipulation for BERT
         input_ids = captions.tolist()
-        # token type ids for tokens_a, tokens_b
-        segment_ids = [0]*len(input_ids) 
-        input_mask = [1]*(len(input_ids))
-        # zero padding for BERT
-        n_pad = cfg.TEXT.WORDS_NUM - len(input_ids)
-        input_ids.extend([0]*n_pad)
-        segment_ids.extend([0]*n_pad)
-        input_mask.extend([0]*n_pad)
+        seq_lens = cap_lens.tolist()
+        segment_ids = []
+        input_mask = []
+        for i, seq_len in enumerate(seq_lens):
+            segment_ids = [0]*seq_len 
+            input_mask = [1]*seq_len
+            # zero padding for BERT
+            n_pad = cfg.TEXT.WORDS_NUM - seq_len
+            input_ids[i].extend([0]*n_pad)
+            segment_ids[i].extend([0]*n_pad)
+            input_mask[i].extend([0]*n_pad)
 
         input_ids = torch.LongTensor(input_ids)
         segment_ids = torch.LongTensor(segment_ids)
@@ -503,14 +506,17 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
 
         # manipulation for BERT
         input_ids = captions.tolist()
-        # token type ids for tokens_a, tokens_b
-        segment_ids = [0]*len(input_ids) 
-        input_mask = [1]*(len(input_ids))
-        # zero padding for BERT
-        n_pad = cfg.TEXT.WORDS_NUM - len(input_ids)
-        input_ids.extend([0]*n_pad)
-        segment_ids.extend([0]*n_pad)
-        input_mask.extend([0]*n_pad)
+        seq_lens = cap_lens.tolist()
+        segment_ids = []
+        input_mask = []
+        for i, seq_len in enumerate(seq_lens):
+            segment_ids = [0]*seq_len 
+            input_mask = [1]*seq_len
+            # zero padding for BERT
+            n_pad = cfg.TEXT.WORDS_NUM - seq_len
+            input_ids[i].extend([0]*n_pad)
+            segment_ids[i].extend([0]*n_pad)
+            input_mask[i].extend([0]*n_pad)
 
         input_ids = torch.LongTensor(input_ids)
         segment_ids = torch.LongTensor(segment_ids)
