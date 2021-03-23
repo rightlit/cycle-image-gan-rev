@@ -205,7 +205,8 @@ class RNN_ENCODER(nn.Module):
 class BERT_RNN_ENCODER(RNN_ENCODER):
     def define_module(self):
         if(cfg.LOCAL_PRETRAINED):
-            self.encoder = LocalPretrainedBert()
+            model_cfg = models.Config.from_json(cfg.BERT_ENCODER.CONFIG)
+            self.encoder = LocalPretrainedBert(model_cfg)
         else:
             self.encoder = BertModel.from_pretrained('bert-base-uncased')
 
