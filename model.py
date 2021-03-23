@@ -19,6 +19,24 @@ from pytorch_pretrained_bert import BertModel
 # for cudnn error fix
 torch.backends.cudnn.enabled = False
 
+# added code
+class LocalPretrainedBert(nn.Module):
+    """ Classifier with Transformer """
+    def __init__(self, cfg):
+        super().__init__()
+        self.transformer = models.Transformer(cfg)
+        #self.fc = nn.Linear(cfg.dim, cfg.dim)
+        self.fc = nn.Linear(cfg.BERT_ENCODER.HIDDEN_DIM, cfg.BERT_ENCODER.HIDDEN_DIM)
+        self.activ = nn.Tanh()
+        #self.drop = nn.Dropout(cfg.p_drop_hidden)
+        self.drop = nn.Dropout(cfg.cfg.BERT_ENCODER.P_DROP_HIDDEN)
+
+    def forward(self, input_ids, segment_ids, input_mask):
+        h = self.transformer(input_ids, segment_ids, input_mask)
+        # only use the first h in the sequence
+        pooled_h = self.activ(self.fc(h[:, 0]))
+        return self.drop(pooled_h)
+
 class Upsample(nn.Module):
     def __init__(self, size=None, scale_factor=None, mode='nearest', align_corners=None):
         super().__init__()
@@ -186,7 +204,11 @@ class RNN_ENCODER(nn.Module):
 
 class BERT_RNN_ENCODER(RNN_ENCODER):
     def define_module(self):
-        self.encoder = BertModel.from_pretrained('bert-base-uncased')
+        if(cfg.LOCAL_PRETRAINED):
+            self.encoder = LocalPretrainedBert()
+        else:
+            self.encoder = BertModel.from_pretrained('bert-base-uncased')
+
         for param in self.encoder.parameters():
             param.requires_grad = False
         self.bert_linear = nn.Linear(768, self.ninput)
