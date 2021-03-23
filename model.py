@@ -261,7 +261,8 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         input_ids = Variable(input_ids).cuda()
         segment_ids = Variable(segment_ids).cuda()
         input_mask = Variable(input_mask).cuda()
-        emb, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
+        #emb, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
+        emb, _ = self.encoder(captions, input_ids, segment_ids, input_mask)
 
         emb = self.bert_linear(emb)
         emb = self.drop(emb)
@@ -519,6 +520,7 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         segment_ids = Variable(segment_ids).cuda()
         input_mask = Variable(input_mask).cuda()
 
+        #text_embeddings, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
         text_embeddings, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
 
         # bs x T x 768
