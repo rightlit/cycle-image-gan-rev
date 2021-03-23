@@ -70,6 +70,7 @@ __C.TEXT.EMBEDDING_DIM = 256
 __C.TEXT.WORDS_NUM = 18
 
 # added code
+__C.BERT_ENCODER = edict()
 __C.BERT_ENCODER.VOCAB = './models/vocab.txt'
 __C.BERT_ENCODER.MODEL = './models/model_steps_9386.pt'
 __C.BERT_ENCODER.CONFIG = './models/bert_base.json'
