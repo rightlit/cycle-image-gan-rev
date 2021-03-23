@@ -22,14 +22,12 @@ torch.backends.cudnn.enabled = False
 # added code
 class LocalPretrainedBert(nn.Module):
     """ Classifier with Transformer """
-    def __init__(self, cfg):
+    def __init__(self, bert_cfg):
         super().__init__()
-        self.transformer = models.Transformer(cfg)
-        #self.fc = nn.Linear(cfg.dim, cfg.dim)
-        self.fc = nn.Linear(cfg.BERT_ENCODER.HIDDEN_DIM, cfg.BERT_ENCODER.HIDDEN_DIM)
+        self.transformer = models.Transformer(bert_cfg)
+        self.fc = nn.Linear(bert_cfg.dim, bert_cfg.dim)
         self.activ = nn.Tanh()
-        #self.drop = nn.Dropout(cfg.p_drop_hidden)
-        self.drop = nn.Dropout(cfg.cfg.BERT_ENCODER.P_DROP_HIDDEN)
+        self.drop = nn.Dropout(bert_cfg.p_drop_hidden)
 
     def forward(self, input_ids, segment_ids, input_mask):
         h = self.transformer(input_ids, segment_ids, input_mask)
@@ -205,7 +203,7 @@ class RNN_ENCODER(nn.Module):
 class BERT_RNN_ENCODER(RNN_ENCODER):
     def define_module(self):
         if(cfg.LOCAL_PRETRAINED):
-            model_cfg = models.Config.from_json(cfg.BERT_ENCODER.CONFIG)
+            model_cfg = pytorchic_models.Config.from_json(cfg.BERT_ENCODER.CONFIG)
             self.encoder = LocalPretrainedBert(model_cfg)
         else:
             self.encoder = BertModel.from_pretrained('bert-base-uncased')
@@ -448,7 +446,13 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         super().__init__(emb_size)
 
         self.hidden_linear = nn.Linear(emb_size, hidden_size)
-        self.encoder = BertModel.from_pretrained('bert-base-uncased')
+        #self.encoder = BertModel.from_pretrained('bert-base-uncased')
+        if(cfg.LOCAL_PRETRAINED):
+            model_cfg = pytorchic_models.Config.from_json(cfg.BERT_ENCODER.CONFIG)
+            self.encoder = LocalPretrainedBert(model_cfg)
+        else:
+            self.encoder = BertModel.from_pretrained('bert-base-uncased')
+
         for param in self.encoder.parameters():
             param.requires_grad = False
 

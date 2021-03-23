@@ -72,8 +72,7 @@ __C.TEXT.WORDS_NUM = 18
 # added code
 __C.BERT_ENCODER.VOCAB = './models/vocab.txt'
 __C.BERT_ENCODER.MODEL = './models/model_steps_9386.pt'
-__C.BERT_ENCODER.HIDDEN_DIM = 768
-__C.BERT_ENCODER.P_DROP_HIDDEN = 0.1
+__C.BERT_ENCODER.CONFIG = './models/bert_base.json'
 
 def _merge_a_into_b(a, b):
     """Merge config dictionary a into config dictionary b, clobbering the
