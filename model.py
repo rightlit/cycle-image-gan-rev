@@ -249,9 +249,9 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         segment_ids = []
         input_mask = []
         for i, seq_len in enumerate(seq_lens):
-            segment_ids[i] = []
+            segment_ids.append([])
             segment_ids[i].append([0]*seq_len) 
-            input_mask[i] = []
+            input_mask.append([])
             input_mask[i].append([1]*seq_len)
             # zero padding for BERT
             n_pad = cfg.TEXT.WORDS_NUM - seq_len
@@ -513,9 +513,9 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         segment_ids = []
         input_mask = []
         for i, seq_len in enumerate(seq_lens):
-            segment_ids[i] = []
+            segment_ids.append([])
             segment_ids[i].append([0]*seq_len) 
-            input_mask[i] = []
+            input_mask.append([])
             input_mask[i].append([1]*seq_len)
             # zero padding for BERT
             n_pad = cfg.TEXT.WORDS_NUM - seq_len
