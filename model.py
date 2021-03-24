@@ -32,10 +32,14 @@ class LocalPretrainedBert(nn.Module):
         self.drop = nn.Dropout(bert_cfg.p_drop_hidden)
 
     def forward(self, input_ids, segment_ids, input_mask):
+        # BS x T x dim
         h = self.transformer(input_ids, segment_ids, input_mask)
         # only use the first h in the sequence
-        pooled_h = self.activ(self.fc(h[:, 0]))
-        return self.drop(pooled_h)
+        # BS x dim
+        #pooled_h = self.activ(self.fc(h[:, 0])) 
+
+        #return self.drop(pooled_h)
+        return h
 
 class Upsample(nn.Module):
     def __init__(self, size=None, scale_factor=None, mode='nearest', align_corners=None):
@@ -243,6 +247,7 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         # --> emb: batch x n_steps x ninput
         #emb, _ = self.encoder(captions, output_all_encoded_layers=False)
 
+        print('captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
         # manipulation for BERT
         input_ids = captions.tolist()
         seq_lens = cap_lens.tolist()
@@ -259,6 +264,7 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
             segment_ids[i].extend([0]*n_pad)
             input_mask[i].extend([0]*n_pad)
 
+        print(input_ids.shape, segment_ids.shape, input_mask.shape)
         input_ids = torch.LongTensor(input_ids)
         segment_ids = torch.LongTensor(segment_ids)
         input_mask = torch.LongTensor(input_mask)
