@@ -267,7 +267,8 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         segment_ids = Variable(segment_ids).cuda()
         input_mask = Variable(input_mask).cuda()
         #emb, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
-        emb, _ = self.encoder(input_ids, segment_ids, input_mask)
+        #emb, _ = self.encoder(input_ids, segment_ids, input_mask)
+        emb = self.encoder(input_ids, segment_ids, input_mask)
 
         emb = self.bert_linear(emb)
         emb = self.drop(emb)
@@ -514,12 +515,12 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         input_mask = []
         for i, seq_len in enumerate(seq_lens):
             segment_ids.append([])
-            segment_ids[i].append([0]*seq_len) 
+            segment_ids[i].extend([0]*seq_len) 
             input_mask.append([])
-            input_mask[i].append([1]*seq_len)
+            input_mask[i].extend([1]*seq_len)
             # zero padding for BERT
             n_pad = cfg.TEXT.WORDS_NUM - seq_len
-            input_ids[i].extend([0]*n_pad)
+            #input_ids[i].extend([0]*n_pad)
             segment_ids[i].extend([0]*n_pad)
             input_mask[i].extend([0]*n_pad)
 
@@ -532,7 +533,8 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         input_mask = Variable(input_mask).cuda()
 
         #text_embeddings, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
-        text_embeddings, _ = self.encoder(input_ids, segment_ids, input_mask)
+        #text_embeddings, _ = self.encoder(input_ids, segment_ids, input_mask)
+        text_embeddings = self.encoder(input_ids, segment_ids, input_mask)
 
         # bs x T x 768
         text_embeddings = self.bert_linear(text_embeddings)
