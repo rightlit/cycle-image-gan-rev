@@ -251,7 +251,7 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
 
         # manipulation for BERT
         #input_ids = captions.data.tolist()
-        input_ids = torch.LongTensor(captions.cpu())
+        #input_ids = torch.LongTensor(captions.cpu())
         seq_lens = cap_lens.tolist()
         segment_ids = []
         input_mask = []
@@ -270,13 +270,14 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         segment_ids = torch.LongTensor(segment_ids)
         input_mask = torch.LongTensor(input_mask)
 
-        input_ids = Variable(input_ids).cuda()
+        #input_ids = Variable(input_ids).cuda()
         segment_ids = Variable(segment_ids).cuda()
         input_mask = Variable(input_mask).cuda()
 
         #emb, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
         #emb, _ = self.encoder(input_ids, segment_ids, input_mask)
-        emb = self.encoder(input_ids, segment_ids, input_mask)
+        #emb = self.encoder(input_ids, segment_ids, input_mask)
+        emb = self.encoder(captions, segment_ids, input_mask)
 
         emb = self.bert_linear(emb)
         emb = self.drop(emb)
