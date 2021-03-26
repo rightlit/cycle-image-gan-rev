@@ -248,15 +248,10 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         #emb, _ = self.encoder(captions, output_all_encoded_layers=False)
 
         print('captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
-        b = captions.shape[0]
-        t = captions.shape[1]
-        input_ids = torch.LongTensor(captions.cpu())
-        segment_ids = torch.zeros([b, t])
-        input_mask = torch.ones([b, t])
 
-        '''
         # manipulation for BERT
-        input_ids = captions.tolist()
+        #input_ids = captions.data.tolist()
+        input_ids = torch.LongTensor(captions.cpu())
         seq_lens = cap_lens.tolist()
         segment_ids = []
         input_mask = []
@@ -267,15 +262,13 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
             input_mask[i].append([1]*seq_len)
             # zero padding for BERT
             n_pad = cfg.TEXT.WORDS_NUM - seq_len
-            input_ids[i].extend([0]*n_pad)
+            #input_ids[i].extend([0]*n_pad)
             segment_ids[i].extend([0]*n_pad)
             input_mask[i].extend([0]*n_pad)
 
-        print(input_ids.shape, segment_ids.shape, input_mask.shape)
-        input_ids = torch.LongTensor(input_ids)
+        #input_ids = torch.LongTensor(input_ids)
         segment_ids = torch.LongTensor(segment_ids)
         input_mask = torch.LongTensor(input_mask)
-        '''
 
         input_ids = Variable(input_ids).cuda()
         segment_ids = Variable(segment_ids).cuda()
