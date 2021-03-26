@@ -250,7 +250,7 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         print('captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
 
         b = captions.shape[0]
-        t - captions.shape[1]
+        t = captions.shape[1]
         segment_ids = torch.zeros([b, t])
         input_mask = torch.ones([b,t])
 
