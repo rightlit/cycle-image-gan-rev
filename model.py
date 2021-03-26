@@ -250,7 +250,7 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         print('captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
         b = captions.shape[0]
         t = captions.shape[1]
-        input_ids = torch.LongTensor(captions)
+        input_ids = torch.LongTensor(captions.cpu())
         segment_ids = torch.zeros([b, t])
         input_mask = torch.ones([b, t])
 
@@ -277,7 +277,7 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         input_mask = torch.LongTensor(input_mask)
         '''
 
-        #input_ids = Variable(input_ids).cuda()
+        input_ids = Variable(input_ids).cuda()
         segment_ids = Variable(segment_ids).cuda()
         input_mask = Variable(input_mask).cuda()
 
