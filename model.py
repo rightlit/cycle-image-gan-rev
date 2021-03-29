@@ -235,7 +235,7 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
 
         self.forward_count = 0
 
-  def init_weights(self):
+    def init_weights(self):
         initrange = 0.1
         self.bert_linear.weight.data.uniform_(-initrange, initrange)
         # Do not need to initialize RNN parameters, which have been initialized
