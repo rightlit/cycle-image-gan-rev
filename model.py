@@ -141,6 +141,8 @@ class RNN_ENCODER(nn.Module):
         self.define_module()
         self.init_weights()
 
+        self.forward_count = 0
+
     def define_module(self):
         self.encoder = nn.Embedding(self.ntoken, self.ninput)
         self.drop = nn.Dropout(self.drop_prob)
@@ -245,7 +247,8 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
     def forward(self, captions, cap_lens, hidden, mask=None):
         # input: torch.LongTensor of size batch x n_steps
 
-        print('captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
+        forward_count = forward_count + 1
+        print(forward_count, ': captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
         if(cfg.LOCAL_PRETRAINED):
 
             # manipulation for BERT
