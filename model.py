@@ -141,8 +141,6 @@ class RNN_ENCODER(nn.Module):
         self.define_module()
         self.init_weights()
 
-        self.forward_count = 0
-
     def define_module(self):
         self.encoder = nn.Embedding(self.ntoken, self.ninput)
         self.drop = nn.Dropout(self.drop_prob)
@@ -235,7 +233,9 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         else:
             raise NotImplementedError
 
-    def init_weights(self):
+          self.forward_count = 0
+
+  def init_weights(self):
         initrange = 0.1
         self.bert_linear.weight.data.uniform_(-initrange, initrange)
         # Do not need to initialize RNN parameters, which have been initialized
@@ -247,8 +247,8 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
     def forward(self, captions, cap_lens, hidden, mask=None):
         # input: torch.LongTensor of size batch x n_steps
 
-        forward_count = forward_count + 1
-        print(forward_count, ': captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
+        self.forward_count = self.forward_count + 1
+        print(self.forward_count, ': captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
         if(cfg.LOCAL_PRETRAINED):
 
             # manipulation for BERT
@@ -505,6 +505,8 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
 
         self.out = nn.Linear(self.num_directions * hidden_size, vocab_size)
 
+        self.forward_count = 0
+        
     #def forward(self, x, captions):
     def forward(self, x, captions, cap_lens):
     #def forward(self, x, captions, input_ids, segment_ids, input_mask):
@@ -517,6 +519,9 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         #  (num_layers * num_directions, batch, hidden_size)
         h_0 = cnn_hidden.unsqueeze(0).repeat(self.nlayers * self.num_directions, 1, 1)
         c_0 = torch.zeros(h_0.shape).to(h_0.device)
+
+        self.forward_count = self.forward_count + 1
+        print(self.forward_count, ': captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
 
         if(cfg.LOCAL_PRETRAINED):
 
