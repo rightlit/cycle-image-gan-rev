@@ -233,7 +233,7 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         else:
             raise NotImplementedError
 
-          self.forward_count = 0
+        self.forward_count = 0
 
   def init_weights(self):
         initrange = 0.1
