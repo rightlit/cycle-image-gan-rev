@@ -244,47 +244,42 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
     #def forward(self, captions, cap_lens, hidden, input_ids, segment_ids, input_mask):
     def forward(self, captions, cap_lens, hidden, mask=None):
         # input: torch.LongTensor of size batch x n_steps
-        # --> emb: batch x n_steps x ninput
-        #emb, _ = self.encoder(captions, output_all_encoded_layers=False)
 
         print('captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
+        if(cfg.LOCAL_PRETRAINED):
 
-        b = captions.shape[0]
-        t = captions.shape[1]
-        segment_ids = torch.zeros([b, t])
-        input_mask = torch.ones([b,t])
+            # manipulation for BERT
+            #input_ids = captions.data.tolist()
+            #input_ids = torch.LongTensor(captions.cpu())
+            seq_lens = cap_lens.tolist()
+            segment_ids = []
+            input_mask = []
+            for i, seq_len in enumerate(seq_lens):
+                segment_ids.append([])
+                segment_ids[i].append([0]*seq_len) 
+                input_mask.append([])
+                input_mask[i].append([1]*seq_len)
+                # zero padding for BERT
+                n_pad = cfg.TEXT.WORDS_NUM - seq_len
+                #input_ids[i].extend([0]*n_pad)
+                segment_ids[i].extend([0]*n_pad)
+                input_mask[i].extend([0]*n_pad)
 
-        '''
-        # manipulation for BERT
-        #input_ids = captions.data.tolist()
-        #input_ids = torch.LongTensor(captions.cpu())
-        seq_lens = cap_lens.tolist()
-        segment_ids = []
-        input_mask = []
-        for i, seq_len in enumerate(seq_lens):
-            segment_ids.append([])
-            segment_ids[i].append([0]*seq_len) 
-            input_mask.append([])
-            input_mask[i].append([1]*seq_len)
-            # zero padding for BERT
-            n_pad = cfg.TEXT.WORDS_NUM - seq_len
-            #input_ids[i].extend([0]*n_pad)
-            segment_ids[i].extend([0]*n_pad)
-            input_mask[i].extend([0]*n_pad)
+            #input_ids = torch.LongTensor(input_ids)
+            segment_ids = torch.LongTensor(segment_ids)
+            input_mask = torch.LongTensor(input_mask)
 
-        #input_ids = torch.LongTensor(input_ids)
-        segment_ids = torch.LongTensor(segment_ids)
-        input_mask = torch.LongTensor(input_mask)
-        '''
-
-        #input_ids = Variable(input_ids).cuda()
-        segment_ids = Variable(segment_ids).cuda()
-        input_mask = Variable(input_mask).cuda()
-
-        #emb, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
-        #emb, _ = self.encoder(input_ids, segment_ids, input_mask)
-        #emb = self.encoder(input_ids, segment_ids, input_mask)
-        emb = self.encoder(captions, segment_ids, input_mask)
+            #input_ids = Variable(input_ids).cuda()
+            segment_ids = Variable(segment_ids).cuda()
+            input_mask = Variable(input_mask).cuda()
+            
+            #emb, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
+            #emb, _ = self.encoder(input_ids, segment_ids, input_mask)
+            #emb = self.encoder(input_ids, segment_ids, input_mask)
+            emb = self.encoder(captions, segment_ids, input_mask)
+        else:
+            # --> emb: batch x n_steps x ninput
+            emb, _ = self.encoder(captions, output_all_encoded_layers=False)
 
         emb = self.bert_linear(emb)
         emb = self.drop(emb)
@@ -520,37 +515,39 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         h_0 = cnn_hidden.unsqueeze(0).repeat(self.nlayers * self.num_directions, 1, 1)
         c_0 = torch.zeros(h_0.shape).to(h_0.device)
 
-        # bs x T x vocab_size
-        # get last layer of bert encoder
-        #text_embeddings, _ = self.encoder(captions, output_all_encoded_layers=False)
+        if(cfg.LOCAL_PRETRAINED):
 
-        # manipulation for BERT
-        input_ids = captions.tolist()
-        seq_lens = cap_lens.tolist()
-        segment_ids = []
-        input_mask = []
-        for i, seq_len in enumerate(seq_lens):
-            segment_ids.append([])
-            segment_ids[i].extend([0]*seq_len) 
-            input_mask.append([])
-            input_mask[i].extend([1]*seq_len)
-            # zero padding for BERT
-            n_pad = cfg.TEXT.WORDS_NUM - seq_len
-            #input_ids[i].extend([0]*n_pad)
-            segment_ids[i].extend([0]*n_pad)
-            input_mask[i].extend([0]*n_pad)
+            # manipulation for BERT
+            input_ids = captions.tolist()
+            seq_lens = cap_lens.tolist()
+            segment_ids = []
+            input_mask = []
+            for i, seq_len in enumerate(seq_lens):
+                segment_ids.append([])
+                segment_ids[i].extend([0]*seq_len) 
+                input_mask.append([])
+                input_mask[i].extend([1]*seq_len)
+                # zero padding for BERT
+                n_pad = cfg.TEXT.WORDS_NUM - seq_len
+                #input_ids[i].extend([0]*n_pad)
+                segment_ids[i].extend([0]*n_pad)
+                input_mask[i].extend([0]*n_pad)
 
-        input_ids = torch.LongTensor(input_ids)
-        segment_ids = torch.LongTensor(segment_ids)
-        input_mask = torch.LongTensor(input_mask)
+            input_ids = torch.LongTensor(input_ids)
+            segment_ids = torch.LongTensor(segment_ids)
+            input_mask = torch.LongTensor(input_mask)
 
-        input_ids = Variable(input_ids).cuda()
-        segment_ids = Variable(segment_ids).cuda()
-        input_mask = Variable(input_mask).cuda()
+            input_ids = Variable(input_ids).cuda()
+            segment_ids = Variable(segment_ids).cuda()
+            input_mask = Variable(input_mask).cuda()
 
-        #text_embeddings, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
-        #text_embeddings, _ = self.encoder(input_ids, segment_ids, input_mask)
-        text_embeddings = self.encoder(input_ids, segment_ids, input_mask)
+            #text_embeddings, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
+            #text_embeddings, _ = self.encoder(input_ids, segment_ids, input_mask)
+            text_embeddings = self.encoder(input_ids, segment_ids, input_mask)
+        else:
+            # bs x T x vocab_size
+            # get last layer of bert encoder
+            text_embeddings, _ = self.encoder(captions, output_all_encoded_layers=False)
 
         # bs x T x 768
         text_embeddings = self.bert_linear(text_embeddings)
