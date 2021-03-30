@@ -224,7 +224,8 @@ def build_models():
         tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
     else:
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    vocab_size = len(tokenizer.vocab)
+    #vocab_size = len(tokenizer.vocab)
+    vocab_size = 3770
     #vocab_size = 30522
 
     #text_encoder = BERT_RNN_ENCODER(dataset.n_words, nhidden=cfg.TEXT.EMBEDDING_DIM)
