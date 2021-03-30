@@ -287,8 +287,11 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
             # --> emb: batch x n_steps x ninput
             emb, _ = self.encoder(captions, output_all_encoded_layers=False)
 
+        print('encoder: emb: ', emb.shape)
         emb = self.bert_linear(emb)
         emb = self.drop(emb)
+        print('bert_linear: emb: ', emb.shape, 'logits: ', logits.shape)
+
         #
         # Returns: a PackedSequence object
         cap_lens = cap_lens.data.tolist()
@@ -565,13 +568,16 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
             # get last layer of bert encoder
             text_embeddings, _ = self.encoder(captions, output_all_encoded_layers=False)
 
+        print('text_embeddings: ', text_embeddings.shape)
         # bs x T x 768
         text_embeddings = self.bert_linear(text_embeddings)
+        print('text_embeddings: ', text_embeddings.shape)
         # bs x T x emb_size
         output, (hn, cn) = self.rnn(text_embeddings, (h_0, c_0))
         # bs, T, hidden_size
         logits = self.out(output)
         # bs, T, vocab_size
+        print('logits: ', logits.shape)
 
         return features, cnn_code, logits
 
