@@ -252,7 +252,7 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         if(cfg.LOCAL_PRETRAINED):
             segment_ids = torch.zeros(captions.shape, dtype=torch.long)
             input_mask = torch.ones(captions.shape, dtype=torch.long)
-            
+
             '''
             # manipulation for BERT
             #input_ids = captions.data.tolist()
@@ -510,8 +510,8 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
 
         self.forward_count = 0
         
-    #def forward(self, x, captions):
-    def forward(self, x, captions, cap_lens):
+    def forward(self, x, captions):
+    #def forward(self, x, captions, cap_lens):
     #def forward(self, x, captions, input_ids, segment_ids, input_mask):
         # (bs x 17 x 17 x nef), (bs x nef)
         features, cnn_code = super().forward(x)
@@ -524,7 +524,7 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         c_0 = torch.zeros(h_0.shape).to(h_0.device)
 
         self.forward_count = self.forward_count + 1
-        print('bert_cnn: ', self.forward_count, 'captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
+        print('bert_cnn: ', self.forward_count, 'captions: ', captions.shape, ' cap_lens: ')
 
         if(cfg.LOCAL_PRETRAINED):
             segment_ids = torch.zeros(captions.shape, dtype=torch.long)

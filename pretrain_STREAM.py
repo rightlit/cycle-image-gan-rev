@@ -86,8 +86,8 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
         #        input_ids, segment_ids, input_mask = prepare_data_bert(data, tokenizer)
 
         # sent_code: batch_size x nef
-        #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
-        words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, cap_lens)
+        words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
+        #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, cap_lens)
         #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, input_ids, segment_ids, input_mask)
         # bs x T x vocab_size
         if(debug_flag):
