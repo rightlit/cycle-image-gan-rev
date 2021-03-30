@@ -208,6 +208,7 @@ class RNN_ENCODER(nn.Module):
 
 class BERT_RNN_ENCODER(RNN_ENCODER):
     def define_module(self):
+        #cfg.LOCAL_PRETRAINED = False
         if(cfg.LOCAL_PRETRAINED):
             model_cfg = pytorchic_models.Config.from_json(cfg.BERT_ENCODER.CONFIG)
             self.encoder = LocalPretrainedBert(model_cfg)
@@ -249,6 +250,8 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
 
         self.forward_count = self.forward_count + 1
         print('bert_rnn: ', self.forward_count, ': captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
+        
+        #cfg.LOCAL_PRETRAINED = False
         if(cfg.LOCAL_PRETRAINED):
             segment_ids = torch.zeros(captions.shape, dtype=torch.long)
             input_mask = torch.ones(captions.shape, dtype=torch.long)
@@ -275,9 +278,10 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
             segment_ids = torch.LongTensor(segment_ids)
             input_mask = torch.LongTensor(input_mask)
             '''
-            #input_ids = Variable(input_ids).cuda()
-            segment_ids = Variable(segment_ids).cuda()
-            input_mask = Variable(input_mask).cuda()
+            if cfg.CUDA:
+                #input_ids = Variable(input_ids).cuda()
+                segment_ids = Variable(segment_ids).cuda()
+                input_mask = Variable(input_mask).cuda()
             
             #emb, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
             #emb, _ = self.encoder(input_ids, segment_ids, input_mask)
@@ -495,8 +499,7 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         super().__init__(emb_size)
 
         self.hidden_linear = nn.Linear(emb_size, hidden_size)
-        cfg.LOCAL_PRETRAINED = False
-        
+        #cfg.LOCAL_PRETRAINED = False
         if(cfg.LOCAL_PRETRAINED):
             model_cfg = pytorchic_models.Config.from_json(cfg.BERT_ENCODER.CONFIG)
             self.encoder = LocalPretrainedBert(model_cfg)
@@ -530,6 +533,7 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         self.forward_count = self.forward_count + 1
         print('bert_cnn: ', self.forward_count, 'captions: ', captions.shape, ' cap_lens: ')
 
+        #cfg.LOCAL_PRETRAINED = False
         if(cfg.LOCAL_PRETRAINED):
             segment_ids = torch.zeros(captions.shape, dtype=torch.long)
             input_mask = torch.ones(captions.shape, dtype=torch.long)
@@ -556,10 +560,11 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
             input_mask = torch.LongTensor(input_mask)
             '''
 
-            #input_ids = Variable(input_ids).cuda()
-            segment_ids = Variable(segment_ids).cuda()
-            input_mask = Variable(input_mask).cuda()
-
+            if cfg.CUDA:
+                #input_ids = Variable(input_ids).cuda()
+                segment_ids = Variable(segment_ids).cuda()
+                input_mask = Variable(input_mask).cuda()
+                
             #text_embeddings, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
             #text_embeddings, _ = self.encoder(input_ids, segment_ids, input_mask)
             #text_embeddings = self.encoder(input_ids, segment_ids, input_mask)
