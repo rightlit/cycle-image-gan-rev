@@ -248,9 +248,12 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         # input: torch.LongTensor of size batch x n_steps
 
         self.forward_count = self.forward_count + 1
-        print(self.forward_count, ': captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
+        print('bert_rnn: ', self.forward_count, ': captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
         if(cfg.LOCAL_PRETRAINED):
-
+            segment_ids = torch.zeros(captions.shape, dtype=torch.long)
+            input_mask = torch.ones(captions.shape, dtype=torch.long)
+            
+            '''
             # manipulation for BERT
             #input_ids = captions.data.tolist()
             #input_ids = torch.LongTensor(captions.cpu())
@@ -271,7 +274,7 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
             #input_ids = torch.LongTensor(input_ids)
             segment_ids = torch.LongTensor(segment_ids)
             input_mask = torch.LongTensor(input_mask)
-
+            '''
             #input_ids = Variable(input_ids).cuda()
             segment_ids = Variable(segment_ids).cuda()
             input_mask = Variable(input_mask).cuda()
@@ -521,10 +524,13 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         c_0 = torch.zeros(h_0.shape).to(h_0.device)
 
         self.forward_count = self.forward_count + 1
-        print(self.forward_count, ': captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
+        print('bert_cnn: ', self.forward_count, 'captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
 
         if(cfg.LOCAL_PRETRAINED):
+            segment_ids = torch.zeros(captions.shape, dtype=torch.long)
+            input_mask = torch.ones(captions.shape, dtype=torch.long)
 
+            '''
             # manipulation for BERT
             input_ids = captions.tolist()
             seq_lens = cap_lens.tolist()
@@ -544,14 +550,16 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
             input_ids = torch.LongTensor(input_ids)
             segment_ids = torch.LongTensor(segment_ids)
             input_mask = torch.LongTensor(input_mask)
+            '''
 
-            input_ids = Variable(input_ids).cuda()
+            #input_ids = Variable(input_ids).cuda()
             segment_ids = Variable(segment_ids).cuda()
             input_mask = Variable(input_mask).cuda()
 
             #text_embeddings, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
             #text_embeddings, _ = self.encoder(input_ids, segment_ids, input_mask)
-            text_embeddings = self.encoder(input_ids, segment_ids, input_mask)
+            #text_embeddings = self.encoder(input_ids, segment_ids, input_mask)
+            text_embeddings = self.encoder(captions, segment_ids, input_mask)
         else:
             # bs x T x vocab_size
             # get last layer of bert encoder
