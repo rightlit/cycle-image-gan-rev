@@ -70,7 +70,8 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
         tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
     else:
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    debug_flag = False
+    #debug_flag = False
+    debug_flag = True
 
     for step, data in enumerate(dataloader, 0):
         # print('step', step)
@@ -222,11 +223,12 @@ def build_models():
     # build model ############################################################
     if(cfg.LOCAL_PRETRAINED):
         tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
+        #vocab_size = len(tokenizer.vocab)
+        vocab_size = 3770
     else:
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    #vocab_size = len(tokenizer.vocab)
-    vocab_size = 3770
-    #vocab_size = 30522
+        vocab_size = len(tokenizer.vocab)
+        #vocab_size = 30522
 
     #text_encoder = BERT_RNN_ENCODER(dataset.n_words, nhidden=cfg.TEXT.EMBEDDING_DIM)
     #image_encoder = BERT_CNN_ENCODER_RNN_DECODER(cfg.TEXT.EMBEDDING_DIM, cfg.CNN_RNN.HIDDEN_DIM, dataset.n_words, rec_unit=cfg.RNN_TYPE)

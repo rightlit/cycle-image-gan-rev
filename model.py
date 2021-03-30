@@ -290,7 +290,7 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         print('encoder: emb: ', emb.shape)
         emb = self.bert_linear(emb)
         emb = self.drop(emb)
-        print('bert_linear: emb: ', emb.shape, 'logits: ', logits.shape)
+        print('bert_linear: emb: ', emb.shape)
 
         #
         # Returns: a PackedSequence object
@@ -495,7 +495,8 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         super().__init__(emb_size)
 
         self.hidden_linear = nn.Linear(emb_size, hidden_size)
-        #self.encoder = BertModel.from_pretrained('bert-base-uncased')
+        cfg.LOCAL_PRETRAINED = False
+        
         if(cfg.LOCAL_PRETRAINED):
             model_cfg = pytorchic_models.Config.from_json(cfg.BERT_ENCODER.CONFIG)
             self.encoder = LocalPretrainedBert(model_cfg)
@@ -568,16 +569,16 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
             # get last layer of bert encoder
             text_embeddings, _ = self.encoder(captions, output_all_encoded_layers=False)
 
-        print('text_embeddings: ', text_embeddings.shape)
+        print('encoder, text_embeddings: ', text_embeddings.shape)
         # bs x T x 768
         text_embeddings = self.bert_linear(text_embeddings)
-        print('text_embeddings: ', text_embeddings.shape)
+        print('bert_linear, text_embeddings: ', text_embeddings.shape)
         # bs x T x emb_size
         output, (hn, cn) = self.rnn(text_embeddings, (h_0, c_0))
         # bs, T, hidden_size
         logits = self.out(output)
         # bs, T, vocab_size
-        print('logits: ', logits.shape)
+        print('rnn, logits: ', logits.shape)
 
         return features, cnn_code, logits
 
