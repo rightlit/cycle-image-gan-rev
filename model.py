@@ -253,13 +253,11 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         
         #cfg.LOCAL_PRETRAINED = False
         if(cfg.LOCAL_PRETRAINED):
-            segment_ids = torch.zeros(captions.shape, dtype=torch.long)
-            input_mask = torch.ones(captions.shape, dtype=torch.long)
+            #segment_ids = torch.zeros(captions.shape, dtype=torch.long)
+            #input_mask = torch.ones(captions.shape, dtype=torch.long)
 
-            '''
             # manipulation for BERT
-            #input_ids = captions.data.tolist()
-            #input_ids = torch.LongTensor(captions.cpu())
+            input_ids = captions.data.tolist()
             seq_lens = cap_lens.tolist()
             segment_ids = []
             input_mask = []
@@ -274,10 +272,10 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
                 segment_ids[i].extend([0]*n_pad)
                 input_mask[i].extend([0]*n_pad)
 
-            #input_ids = torch.LongTensor(input_ids)
+            input_ids = torch.LongTensor(input_ids)
             segment_ids = torch.LongTensor(segment_ids)
             input_mask = torch.LongTensor(input_mask)
-            '''
+
             if cfg.CUDA:
                 #input_ids = Variable(input_ids).cuda()
                 segment_ids = Variable(segment_ids).cuda()
@@ -535,13 +533,13 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
 
         #cfg.LOCAL_PRETRAINED = False
         if(cfg.LOCAL_PRETRAINED):
-            segment_ids = torch.zeros(captions.shape, dtype=torch.long)
-            input_mask = torch.ones(captions.shape, dtype=torch.long)
+            #segment_ids = torch.zeros(captions.shape, dtype=torch.long)
+            #input_mask = torch.ones(captions.shape, dtype=torch.long)
 
-            '''
             # manipulation for BERT
             input_ids = captions.tolist()
-            seq_lens = cap_lens.tolist()
+            #seq_lens = cap_lens.tolist()
+            seq_lens = captions.shape[1]
             segment_ids = []
             input_mask = []
             for i, seq_len in enumerate(seq_lens):
@@ -558,10 +556,9 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
             input_ids = torch.LongTensor(input_ids)
             segment_ids = torch.LongTensor(segment_ids)
             input_mask = torch.LongTensor(input_mask)
-            '''
 
             if cfg.CUDA:
-                #input_ids = Variable(input_ids).cuda()
+                input_ids = Variable(input_ids).cuda()
                 segment_ids = Variable(segment_ids).cuda()
                 input_mask = Variable(input_mask).cuda()
                 
