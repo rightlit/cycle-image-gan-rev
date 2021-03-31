@@ -70,7 +70,15 @@ class Embeddings(nn.Module):
         seq_len = x.size(1)
         pos = torch.arange(seq_len, dtype=torch.long, device=x.device)
         pos = pos.unsqueeze(0).expand_as(x) # (S,) -> (B, S)
-
+        
+        '''
+        #print('seq_len: ', seq_len, 'pos: ', pos.shape)
+        #print(x)
+        e3 = self.seg_embed(seg)
+        e2 = self.pos_embed(pos)
+        e1 = self.tok_embed(x)
+        e = e1 + e2 + e3
+        '''
         e = self.tok_embed(x) + self.pos_embed(pos) + self.seg_embed(seg)
         return self.drop(self.norm(e))
 

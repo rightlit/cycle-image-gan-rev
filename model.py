@@ -249,7 +249,7 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
         # input: torch.LongTensor of size batch x n_steps
 
         self.forward_count = self.forward_count + 1
-        print('bert_rnn: ', self.forward_count, ': captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
+        #print('bert_rnn: ', self.forward_count, ': captions: ', captions.shape, ' cap_lens: ', cap_lens.shape)
         
         #cfg.LOCAL_PRETRAINED = False
         if(cfg.LOCAL_PRETRAINED):
@@ -291,10 +291,10 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
             # --> emb: batch x n_steps x ninput
             emb, _ = self.encoder(captions, output_all_encoded_layers=False)
 
-        print('encoder: emb: ', emb.shape)
+        #print('encoder: emb: ', emb.shape)
         emb = self.bert_linear(emb)
         emb = self.drop(emb)
-        print('bert_linear: emb: ', emb.shape)
+        #print('bert_linear: emb: ', emb.shape)
 
         #
         # Returns: a PackedSequence object
@@ -531,7 +531,7 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
         c_0 = torch.zeros(h_0.shape).to(h_0.device)
 
         self.forward_count = self.forward_count + 1
-        print('bert_cnn: ', self.forward_count, 'captions: ', captions.shape, ' cap_lens: ')
+        #print('bert_cnn: ', self.forward_count, 'captions: ', captions.shape, ' cap_lens: ')
 
         #cfg.LOCAL_PRETRAINED = False
         if(cfg.LOCAL_PRETRAINED):
@@ -574,16 +574,16 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
             # get last layer of bert encoder
             text_embeddings, _ = self.encoder(captions, output_all_encoded_layers=False)
 
-        print('encoder, text_embeddings: ', text_embeddings.shape)
+        #print('encoder, text_embeddings: ', text_embeddings.shape)
         # bs x T x 768
         text_embeddings = self.bert_linear(text_embeddings)
-        print('bert_linear, text_embeddings: ', text_embeddings.shape)
+        #print('bert_linear, text_embeddings: ', text_embeddings.shape)
         # bs x T x emb_size
         output, (hn, cn) = self.rnn(text_embeddings, (h_0, c_0))
         # bs, T, hidden_size
         logits = self.out(output)
         # bs, T, vocab_size
-        print('rnn, logits: ', logits.shape)
+        #print('rnn, logits: ', logits.shape)
 
         return features, cnn_code, logits
 

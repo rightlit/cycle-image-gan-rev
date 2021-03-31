@@ -224,8 +224,9 @@ def build_models():
     #cfg.LOCAL_PRETRAINED = False
     if(cfg.LOCAL_PRETRAINED):
         tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
-        #vocab_size = len(tokenizer.vocab)
+        vocab_size = len(tokenizer.vocab)
         vocab_size = 3770
+        #vocab_size = 4000
     else:
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         vocab_size = len(tokenizer.vocab)
