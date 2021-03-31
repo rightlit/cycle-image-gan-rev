@@ -277,14 +277,13 @@ class BERT_RNN_ENCODER(RNN_ENCODER):
             input_mask = torch.LongTensor(input_mask)
 
             if cfg.CUDA:
-                #input_ids = Variable(input_ids).cuda()
+                input_ids = Variable(input_ids).cuda()
                 segment_ids = Variable(segment_ids).cuda()
                 input_mask = Variable(input_mask).cuda()
             
             #emb, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
             #emb, _ = self.encoder(input_ids, segment_ids, input_mask)
-            #emb = self.encoder(input_ids, segment_ids, input_mask)
-            emb = self.encoder(captions, segment_ids, input_mask)
+            emb = self.encoder(input_ids, segment_ids, input_mask)
         else:
             # --> emb: batch x n_steps x ninput
             emb, _ = self.encoder(captions, output_all_encoded_layers=False)
@@ -563,8 +562,7 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
                 
             #text_embeddings, _ = self.encoder(captions, input_ids, segment_ids, input_mask, output_all_encoded_layers=False)
             #text_embeddings, _ = self.encoder(input_ids, segment_ids, input_mask)
-            #text_embeddings = self.encoder(input_ids, segment_ids, input_mask)
-            text_embeddings = self.encoder(captions, segment_ids, input_mask)
+            text_embeddings = self.encoder(input_ids, segment_ids, input_mask)
         else:
             # bs x T x vocab_size
             # get last layer of bert encoder
