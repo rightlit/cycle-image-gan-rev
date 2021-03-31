@@ -87,8 +87,8 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
         #        input_ids, segment_ids, input_mask = prepare_data_bert(data, tokenizer)
 
         # sent_code: batch_size x nef
-        words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
-        #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, cap_lens)
+        #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
+        words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, cap_lens)
         #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, input_ids, segment_ids, input_mask)
         # bs x T x vocab_size
         if(debug_flag):
@@ -225,7 +225,7 @@ def build_models():
     if(cfg.LOCAL_PRETRAINED):
         tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
         vocab_size = len(tokenizer.vocab)
-        vocab_size = 3770
+        #vocab_size = 3770
         #vocab_size = 4000
     else:
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')

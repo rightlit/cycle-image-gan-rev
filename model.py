@@ -515,8 +515,8 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
 
         self.forward_count = 0
         
-    def forward(self, x, captions):
-    #def forward(self, x, captions, cap_lens):
+    #def forward(self, x, captions):
+    def forward(self, x, captions, cap_lens):
     #def forward(self, x, captions, input_ids, segment_ids, input_mask):
         # (bs x 17 x 17 x nef), (bs x nef)
         features, cnn_code = super().forward(x)
@@ -538,8 +538,7 @@ class BERT_CNN_ENCODER_RNN_DECODER(CNN_ENCODER):
 
             # manipulation for BERT
             input_ids = captions.tolist()
-            #seq_lens = cap_lens.tolist()
-            seq_lens = captions.shape[1]
+            seq_lens = cap_lens.tolist()
             segment_ids = []
             input_mask = []
             for i, seq_len in enumerate(seq_lens):
