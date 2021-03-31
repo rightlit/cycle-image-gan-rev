@@ -61,7 +61,7 @@ class Embeddings(nn.Module):
         self.pos_embed = nn.Embedding(cfg.max_len, cfg.dim) # position embedding
         self.seg_embed = nn.Embedding(cfg.n_segments, cfg.dim) # segment(token type) embedding
 
-        print('vocab_size :', cfg.vocab_size, 'max_len : ', cfg.max_len, 'n_segments:', cfg.n_segments)
+        #print('vocab_size :', cfg.vocab_size, 'max_len : ', cfg.max_len, 'n_segments:', cfg.n_segments)
 
         self.norm = LayerNorm(cfg)
         self.drop = nn.Dropout(cfg.p_drop_hidden)
@@ -70,7 +70,7 @@ class Embeddings(nn.Module):
         seq_len = x.size(1)
         pos = torch.arange(seq_len, dtype=torch.long, device=x.device)
         pos = pos.unsqueeze(0).expand_as(x) # (S,) -> (B, S)
-        
+
         '''
         #print('seq_len: ', seq_len, 'pos: ', pos.shape)
         #print(x)
