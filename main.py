@@ -18,6 +18,7 @@ import torch
 import torchvision.transforms as transforms
 
 from pytorch_pretrained_bert import BertTokenizer
+import tokenization
 
 dir_path = (os.path.abspath(os.path.join(os.path.realpath(__file__), './.')))
 sys.path.append(dir_path)
@@ -141,9 +142,11 @@ if __name__ == "__main__":
         dataset, batch_size=cfg.TRAIN.BATCH_SIZE,
         drop_last=True, shuffle=bshuffle, num_workers=int(cfg.WORKERS))
 
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    if(cfg.LOCAL_PRETRAINED):
+        tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
+    else:
+        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     vocab_size = len(tokenizer.vocab)
-    #vocab_size = 30522
 
     # Define models and go to train/evaluate
     trainer_ = getattr(trainer, cfg.TRAIN.TRAINER)
