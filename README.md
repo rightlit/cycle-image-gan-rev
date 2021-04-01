@@ -1,4 +1,4 @@
-# cycle-image-gan revision for Colab
+# cycle-image-gan revision and demos
 
 This is cycle-image-gan revised version for Google Colab.
 
