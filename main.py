@@ -40,7 +40,12 @@ def gen_example(wordtoix, algo):
     '''generate images from example sentences'''
 
     from nltk.tokenize import RegexpTokenizer
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    #tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+
+    if(cfg.LOCAL_PRETRAINED):
+        tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
+    else:
+        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
 
     filepath = '%s/example_filenames.txt' % (cfg.DATA_DIR)
