@@ -4,6 +4,7 @@ DATASET_NAME: 'birds'
 DATA_DIR: 'data/birds'
 GPU_ID: 3
 WORKERS: 1
+LOCAL_PRETRAINED: False
 
 B_VALIDATION: False  # True  # False
 TREE:
@@ -13,7 +14,7 @@ TREE:
 TRAIN:
     TRAINER: 'CycleGANTrainer'
     FLAG: False
-    NET_G: 'models/netG_epoch_200.pth'
+    NET_G: 'models/netG_epoch_600.pth'
     B_NET_D: False
     BATCH_SIZE: 100
     NET_E: 'STREAMencoders/bird/text_encoder200.pth'
@@ -30,3 +31,8 @@ TEXT:
     EMBEDDING_DIM: 768
     CAPTIONS_PER_IMAGE: 10
     WORDS_NUM: 25
+
+BERT_ENCODER:
+    VOCAB: './models/vocab.txt'
+    MODEL: './models/model_steps_9386.pt'
+    CONFIG: './models/bert_base.json'
