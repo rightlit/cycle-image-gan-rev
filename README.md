@@ -31,7 +31,7 @@ Pytorch 1.7.0+cu101
 the medium sized bird has a dark grey color, a black downward curved beak, and long wings. | the medium sized bird has a dark grey color, a black downward curved beak, and long wings.
 ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_0_g2.png) | ![](models/netG_epoch_600_localbert/Black_Footed_Albatross_0001_796111/0_s_0_g2.png)
 the bird is dark grey brown with a thick curved bill and a flat shaped tail. | the bird is dark grey brown with a thick curved bill and a flat shaped tail.
-![](models/netG_epoch/Black_Footed_Albatross_0001_796111/0_s_1_g2.png) | ![](models/netG_epoch_600_localbert/Black_Footed_Albatross_0001_796111/0_s_1_g2.png)
+![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_1_g2.png) | ![](models/netG_epoch_600_localbert/Black_Footed_Albatross_0001_796111/0_s_1_g2.png)
 bird has brown body feathers, white breast feathers and black beak | bird has brown body feathers, white breast feathers and black beak
 ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_2_g2.png) | ![](models/netG_epoch_600_localbert/Black_Footed_Albatross_0001_796111/0_s_2_g2.png)
 this bird has a dark brown overall body color, with a small white patch around the base of the bill. | this bird has a dark brown overall body color, with a small white patch around the base of the bill.
