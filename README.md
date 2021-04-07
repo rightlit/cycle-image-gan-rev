@@ -38,6 +38,16 @@ this bird has a dark brown overall body color, with a small white patch around t
 ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_3_g2.png) | ![](models/netG_epoch_600_localbert/Black_Footed_Albatross_0001_796111/0_s_3_g2.png)
 the bird has very long and large brown wings, as well as a black body and a long black beak. | the bird has very long and large brown wings, as well as a black body and a long black beak.
 ![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_4_g2.png) | ![](models/netG_epoch_600_localbert/Black_Footed_Albatross_0001_796111/0_s_4_g2.png)
+it is a type of albatross with black wings, tail, back and beak, and has a white ring at the base of its beak. | it is a type of albatross with black wings, tail, back and beak, and has a white ring at the base of its beak.
+![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_5_g2.png) | ![](models/netG_epoch_600_localbert/Black_Footed_Albatross_0001_796111/0_s_5_g2.png)
+this bird has brown plumage and a white ring at the base of its long, curved brown beak. | this bird has brown plumage and a white ring at the base of its long, curved brown beak.
+![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_6_g2.png) | ![](models/netG_epoch_600_localbert/Black_Footed_Albatross_0001_796111/0_s_6_g2.png)
+the entire body is dark brown, as is the bill, with a white band encircling where the bill meets the head. | the entire body is dark brown, as is the bill, with a white band encircling where the bill meets the head.
+![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_7_g2.png) | ![](models/netG_epoch_600_localbert/Black_Footed_Albatross_0001_796111/0_s_7_g2.png)
+this bird is gray in color, with a large curved beak. | this bird is gray in color, with a large curved beak.
+![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_8_g2.png) | ![](models/netG_epoch_600_localbert/Black_Footed_Albatross_0001_796111/0_s_8_g2.png)
+a large gray bird with a long wingspan and a long black beak. | a large gray bird with a long wingspan and a long black beak.
+![](models/netG_epoch_600/Black_Footed_Albatross_0001_796111/0_s_9_g2.png) | ![](models/netG_epoch_600_localbert/Black_Footed_Albatross_0001_796111/0_s_9_g2.png)
 
 **Reference**
 
