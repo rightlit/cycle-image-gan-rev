@@ -76,12 +76,12 @@ def gen_example(wordtoix, algo):
                         print('sent', sent)
                         continue
 
-                    #rev = []
-                    #for t in tokens:
-                    #    t = t.encode('ascii', 'ignore').decode('ascii')
-                    #    if len(t) > 0 and t in wordtoix:
-                    #        rev.append(wordtoix[t])
-                    rev = tokenizer.convert_tokens_to_ids(tokens)
+                    rev = []
+                    for t in tokens:
+                        t = t.encode('ascii', 'ignore').decode('ascii')
+                        if len(t) > 0 and t in wordtoix:
+                            rev.append(wordtoix[t])
+                    #rev = tokenizer.convert_tokens_to_ids(tokens)
                     captions.append(rev)
                     cap_lens.append(len(rev))
             max_len = np.max(cap_lens)
