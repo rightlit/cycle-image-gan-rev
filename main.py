@@ -154,10 +154,19 @@ if __name__ == "__main__":
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     vocab_size = len(tokenizer.vocab)
 
+    #rev = tokenizer.convert_tokens_to_ids(tokens)
+
+    ixtoword = {}
+    wordtoix = {}
+    if(vocab_size > 0):
+        for w, ix in tokenizer.vocab.items():
+            wordtoix[w] = ix
+            ixtoword[ix] = w
+
     # Define models and go to train/evaluate
     trainer_ = getattr(trainer, cfg.TRAIN.TRAINER)
     #algo = trainer_(output_dir, dataloader, dataset.n_words, dataset.ixtoword)
-    algo = trainer_(output_dir, dataloader, vocab_size, dataset.ixtoword)
+    algo = trainer_(output_dir, dataloader, vocab_size, ixtoword)
 
     start_t = time.time()
     if cfg.TRAIN.FLAG:
@@ -168,6 +177,6 @@ if __name__ == "__main__":
             algo.sampling(split_dir)  # generate images for the whole valid dataset
         else:
             #gen_example(dataset.wordtoix, algo)  # generate images for customized captions
-            gen_example(tokenizer.vocab, algo)  # generate images for customized captions
+            gen_example(wordtoix, algo)  # generate images for customized captions
     end_t = time.time()
     print('Total time for training:', end_t - start_t)
