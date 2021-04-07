@@ -167,6 +167,7 @@ if __name__ == "__main__":
         if cfg.B_VALIDATION:
             algo.sampling(split_dir)  # generate images for the whole valid dataset
         else:
-            gen_example(dataset.wordtoix, algo)  # generate images for customized captions
+            #gen_example(dataset.wordtoix, algo)  # generate images for customized captions
+            gen_example(tokenizer.vocab, algo)  # generate images for customized captions
     end_t = time.time()
     print('Total time for training:', end_t - start_t)
