@@ -14,8 +14,7 @@ TREE:
 TRAIN:
     TRAINER: 'CycleGANTrainer'
     FLAG: True
-    #NET_G: './models/netG_epoch_580.pth'
-    NET_G: ''
+    NET_G: './models/netG_epoch_40.pth'
     B_NET_D: True
     BATCH_SIZE: 20  # 22
     MAX_EPOCH: 600
@@ -24,7 +23,7 @@ TRAIN:
     GENERATOR_LR: 0.0002
     #
     #NET_E: 'output/birds_STREAM_2019_06_07_18_55_55/Model/text_encoder100.pth'
-    NET_E: 'STREAMencoders/flower/text_encoder300.pth'
+    NET_E: 'STREAMencoders/flower/text_encoder200.pth'
     SMOOTH:
         GAMMA1: 4.0  # 1,2,5 good 4 best  10&100bad
         GAMMA2: 5.0
