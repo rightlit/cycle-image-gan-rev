@@ -4,6 +4,7 @@ DATASET_NAME: 'flowers'
 DATA_DIR: 'data/flowers'
 GPU_ID: 3
 WORKERS: 1
+LOCAL_PRETRAINED: False
 
 B_VALIDATION: False  # True  # False
 TREE:
@@ -30,3 +31,8 @@ TEXT:
     EMBEDDING_DIM: 768
     CAPTIONS_PER_IMAGE: 10
     WORDS_NUM: 25
+
+BERT_ENCODER:
+    VOCAB: './models/vocab.txt'
+    MODEL: './models/model_steps_6241.pt'
+    CONFIG: './models/bert_base.json'
