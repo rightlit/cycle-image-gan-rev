@@ -12,6 +12,13 @@ from torch.utils.data.dataset import Dataset
 
 from skimage import io
 
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Calculate inception score')
+    parser.add_argument('--data_dir', dest='data_dir', type=str, default='models/netG_epoch_600')
+    args = parser.parse_args()
+    return args
 
 class GeneratedDataset(Dataset):
     def __init__(self, root_dir, transform=None):
@@ -97,8 +104,11 @@ def inception_score(imgs, cuda=True, batch_size=32, resize=False, splits=1):
 
     return np.mean(split_scores), np.std(split_scores)
 
+if __name__ == "__main__":
+    args = parse_args()
 
-data_path = 'models/attn/netG_epoch_150/single'
-imgs = GeneratedDataset(data_path)
+    #data_path = 'models/attn/netG_epoch_150/single'
+    data_path = args.data_dir
+    imgs = GeneratedDataset(data_path)
 
-print(inception_score(imgs))
+    print(inception_score(imgs))
