@@ -13,6 +13,8 @@ from torch.utils.data.dataset import Dataset
 from skimage import io
 
 import argparse
+import torchvision.transforms as transforms
+import torchvision.datasets as dset
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Calculate inception score')
@@ -44,6 +46,16 @@ class GeneratedDataset(Dataset):
             sample = self.transform(sample)
 
         return sample
+
+class SimpleDataset(torch.utils.data.Dataset):
+    def __init__(self, orig):
+        self.orig = orig
+
+    def __getitem__(self, index):
+        return self.orig[index][0]
+
+    def __len__(self):
+        return len(self.orig)
 
 def inception_score(imgs, cuda=True, batch_size=32, resize=False, splits=1):
     """Computes the inception score of the generated images imgs
@@ -109,6 +121,17 @@ if __name__ == "__main__":
 
     #data_path = 'models/attn/netG_epoch_150/single'
     data_path = args.data_dir
-    imgs = GeneratedDataset(data_path)
+
+    transform=transforms.Compose([
+        transforms.Scale(32),       
+        transforms.CenterCrop(128),  
+        transforms.ToTensor(),      
+        transforms.Normalize((0.5, 0.5, 0.5),  (0.5, 0.5, 0.5)),
+     ])
+
+    #imgs = GeneratedDataset(data_path, transform=transform)
+
+    img_dset = dset.ImageFolder(root=data_path, transform=transform)
+    imgs = SimpleDataset(img_dset)
 
     print(inception_score(imgs))
