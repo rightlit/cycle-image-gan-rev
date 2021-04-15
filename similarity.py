@@ -32,6 +32,7 @@ from pytorch_pretrained_bert import BertTokenizer
 import pickle
 
 import tokenization
+from datasets import DevTextBertDataset
 
 dir_path = (os.path.abspath(os.path.join(os.path.realpath(__file__), './.')))
 sys.path.append(dir_path)

@@ -560,8 +560,8 @@ class DevTextBertDataset(TextDataset):
         wordtoix = {}
 
 
-        train_captions_new = []
-        for sent in train_captions:
+        dev_captions_new = []
+        for sent in dev_captions:
             indexed_tokens = self.tokenizer.convert_tokens_to_ids(sent)
             dev_captions_new.append(indexed_tokens)
             for idx, word in zip(indexed_tokens, sent):
