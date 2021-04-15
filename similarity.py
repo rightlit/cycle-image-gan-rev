@@ -136,6 +136,7 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
         t_total_loss += t_loss.data
 
         # similarity score
+        print('calculating similarity')
         similarities = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
 
         if step == 50:
@@ -267,6 +268,7 @@ if __name__ == "__main__":
     try:
         lr = cfg.TRAIN.ENCODER_LR
         if(True):
+            print('dataloader_val : ', len(dataloader_val))
             if len(dataloader_val) > 0:
                 s_loss, w_loss, t_loss = evaluate(dataloader_val, image_encoder,
                                           text_encoder, batch_size, labels)

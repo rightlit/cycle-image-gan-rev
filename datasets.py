@@ -249,12 +249,10 @@ class TextDataset(Dataset):
     def load_text_data(self, data_dir, split):
         train_names = self.load_filenames(data_dir, 'train')
         test_names = self.load_filenames(data_dir, 'test')
-        dev_names = self.load_filenames(data_dir, 'dev')
         filepath = os.path.join(data_dir, 'captions.pickle')
         if not os.path.isfile(filepath):
             train_captions = self.load_captions(data_dir, train_names)
             test_captions = self.load_captions(data_dir, test_names)
-            dev_captions = self.load_captions(data_dir, dev_names)
 
             train_captions, test_captions, ixtoword, wordtoix, n_words = \
                 self.build_dictionary(train_captions, test_captions)
@@ -275,12 +273,9 @@ class TextDataset(Dataset):
             # the indices of words in a sentence
             captions = train_captions
             filenames = train_names
-        elif split == 'test':  # split=='test'
+        else:  # split=='test'
             captions = test_captions
             filenames = test_names
-        else:  # split=='dev'
-            captions = dev_captions
-            filenames = dev_names
         return filenames, captions, ixtoword, wordtoix, n_words
 
     def load_class_id(self, data_dir, total_num):
@@ -430,7 +425,6 @@ class TextBertDataset(TextDataset):
         test_names = self.load_filenames(data_dir, 'test')
         dev_names = self.load_filenames(data_dir, 'dev')
         filepath = os.path.join(data_dir, 'bert_captions.pickle')
-        dev_captions = []
         
         if not os.path.isfile(filepath):
             train_captions = self.load_captions(data_dir, train_names)
@@ -451,6 +445,8 @@ class TextBertDataset(TextDataset):
                 del x
                 n_words = len(ixtoword)
                 print('Load from: ', filepath)
+
+                dev_captions = self.load_captions(data_dir, dev_names)
         if split == 'train':
             # a list of list: each list contains
             # the indices of words in a sentence
