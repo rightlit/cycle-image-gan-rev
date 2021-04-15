@@ -428,10 +428,12 @@ class TextBertDataset(TextDataset):
     def load_text_data(self, data_dir, split):
         train_names = self.load_filenames(data_dir, 'train')
         test_names = self.load_filenames(data_dir, 'test')
+        dev_names = self.load_filenames(data_dir, 'dev')
         filepath = os.path.join(data_dir, 'bert_captions.pickle')
         if not os.path.isfile(filepath):
             train_captions = self.load_captions(data_dir, train_names)
             test_captions = self.load_captions(data_dir, test_names)
+            dev_captions = self.load_captions(data_dir, dev_names)
 
             train_captions, test_captions, ixtoword, wordtoix, n_words = \
                 self.build_dictionary(train_captions, test_captions)
@@ -452,9 +454,12 @@ class TextBertDataset(TextDataset):
             # the indices of words in a sentence
             captions = train_captions
             filenames = train_names
-        else:  # split=='test'
+        elif split == 'test':  # split=='test'
             captions = test_captions
             filenames = test_names
+        else:  # split=='dev'
+            captions = dev_captions
+            filenames = dev_names
         return filenames, captions, ixtoword, wordtoix, n_words
 
 
