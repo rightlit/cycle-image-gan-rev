@@ -430,6 +430,8 @@ class TextBertDataset(TextDataset):
         test_names = self.load_filenames(data_dir, 'test')
         dev_names = self.load_filenames(data_dir, 'dev')
         filepath = os.path.join(data_dir, 'bert_captions.pickle')
+        dev_captions = []
+        
         if not os.path.isfile(filepath):
             train_captions = self.load_captions(data_dir, train_names)
             test_captions = self.load_captions(data_dir, test_names)
