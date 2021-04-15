@@ -423,13 +423,11 @@ class TextBertDataset(TextDataset):
     def load_text_data(self, data_dir, split):
         train_names = self.load_filenames(data_dir, 'train')
         test_names = self.load_filenames(data_dir, 'test')
-        dev_names = self.load_filenames(data_dir, 'dev')
         filepath = os.path.join(data_dir, 'bert_captions.pickle')
         
         if not os.path.isfile(filepath):
             train_captions = self.load_captions(data_dir, train_names)
             test_captions = self.load_captions(data_dir, test_names)
-            dev_captions = self.load_captions(data_dir, dev_names)
 
             train_captions, test_captions, ixtoword, wordtoix, n_words = \
                 self.build_dictionary(train_captions, test_captions)
@@ -446,18 +444,15 @@ class TextBertDataset(TextDataset):
                 n_words = len(ixtoword)
                 print('Load from: ', filepath)
 
-                dev_captions = self.load_captions(data_dir, dev_names)
         if split == 'train':
             # a list of list: each list contains
             # the indices of words in a sentence
             captions = train_captions
             filenames = train_names
-        elif split == 'test':  # split=='test'
+        else:  # split=='test'
             captions = test_captions
             filenames = test_names
-        else:  # split=='dev'
-            captions = dev_captions
-            filenames = dev_names
+
         return filenames, captions, ixtoword, wordtoix, n_words
 
 
@@ -487,4 +482,91 @@ class TextBertDataset(TextDataset):
                 ixtoword[idx] = word
 
         return [train_captions_new, test_captions_new,
+                ixtoword, wordtoix, len(ixtoword)]
+
+# added DevTextBertDataset
+class DevTextBertDataset(TextDataset):
+    """
+    Text dataset on Bert
+    https://github.com/huggingface/pytorch-pretrained-BERT
+    """
+    if(cfg.LOCAL_PRETRAINED):
+        tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
+    else:
+        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)        # Load pre-trained model tokenizer (vocabulary)
+
+    def load_captions(self, data_dir, filenames):
+        all_captions = []
+        for i in range(len(filenames)):
+            cap_path = '%s/text/%s.txt' % (data_dir, filenames[i])
+            with open(cap_path, "r") as f:
+                captions = f.read().split('\n')
+                cnt = 0
+                for cap in captions:
+                    if len(cap) == 0:
+                        continue
+                    # picks out sequences of alphanumeric characters as tokens
+                    # and drops everything else
+                    tokens = self.tokenizer.tokenize(cap.lower())
+                    # print('tokens', tokens)
+                    if len(tokens) == 0:
+                        print('cap', cap)
+                        continue
+
+                    tokens_new = []
+                    for t in tokens:
+                        t = t.encode('ascii', 'ignore').decode('ascii')
+                        if len(t) > 0:
+                            tokens_new.append(t)
+                    all_captions.append(tokens_new)
+                    cnt += 1
+                    if cnt == self.embeddings_num:
+                        break
+                if cnt < self.embeddings_num:
+                    print('ERROR: the captions for %s less than %d'
+                          % (filenames[i], cnt))
+
+        return all_captions
+
+    def load_text_data(self, data_dir, split):
+        #train_names = self.load_filenames(data_dir, 'train')
+        #test_names = self.load_filenames(data_dir, 'test')
+        dev_names = self.load_filenames(data_dir, 'dev')
+        #filepath = os.path.join(data_dir, 'dev_bert_captions.pickle')
+        
+        if True:
+            #train_captions = self.load_captions(data_dir, train_names)
+            #test_captions = self.load_captions(data_dir, test_names)
+            dev_captions = self.load_captions(data_dir, dev_names)
+
+            dev_captions, ixtoword, wordtoix, n_words = \
+                self.build_dictionary(dev_captions)
+
+        if split == 'dev':
+            captions = dev_captions
+            filenames = dev_names
+        return filenames, captions, ixtoword, wordtoix, n_words
+
+
+    def build_dictionary(self, dev_captions):
+        """
+        Tokenize according to bert model
+        """
+        captions = dev_captions
+        ixtoword = {}
+        wordtoix = {}
+
+
+        train_captions_new = []
+        for sent in train_captions:
+            indexed_tokens = self.tokenizer.convert_tokens_to_ids(sent)
+            dev_captions_new.append(indexed_tokens)
+            for idx, word in zip(indexed_tokens, sent):
+                wordtoix[word] = idx
+                ixtoword[idx] = word
+
+        return [dev_captions_new,
                 ixtoword, wordtoix, len(ixtoword)]
