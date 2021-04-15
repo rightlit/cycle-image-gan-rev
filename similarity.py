@@ -48,6 +48,63 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch_size):
+    """
+        words_emb(query): batch x nef x seq_len
+        img_features(context): batch x nef x 17 x 17
+    """
+    #words_emb = torch.randn(1,768, 18)
+    #img_features = torch.randn(1,768,17,17)
+    img_features = words_features
+
+    masks = []
+    att_maps = []
+    similarities = []
+    #cap_lens = cap_lens.data.tolist()
+    #batch_size = 1
+    words_num = 18
+    GAMMA1= 4.0
+    GAMMA2= 5.0
+    
+    for i in range(batch_size):
+
+        # Get the i-th text description
+        #words_num = cap_lens[i]
+        # -> 1 x nef x words_num
+        word = words_emb[i, :, :words_num].unsqueeze(0).contiguous()
+        # -> batch_size x nef x words_num
+        word = word.repeat(batch_size, 1, 1)
+        # batch x nef x 17*17
+        context = img_features
+        """
+            word(query): batch x nef x words_num
+            context: batch x nef x 17 x 17
+            weiContext: batch x nef x words_num
+            attn: batch x words_num x 17 x 17
+        """
+        weiContext, attn = func_attention(word, context, GAMMA1)
+        att_maps.append(attn[i].unsqueeze(0).contiguous())
+        # --> batch_size x words_num x nef
+        word = word.transpose(1, 2).contiguous()
+        weiContext = weiContext.transpose(1, 2).contiguous()
+        # --> batch_size*words_num x nef
+        word = word.view(batch_size * words_num, -1)
+        weiContext = weiContext.view(batch_size * words_num, -1)
+        #
+        # -->batch_size*words_num
+        row_sim = cosine_similarity(word, weiContext)
+        # --> batch_size x words_num
+        row_sim = row_sim.view(batch_size, words_num)
+
+        # Eq. (10)
+        row_sim.mul_(GAMMA2).exp_()
+        row_sim = row_sim.sum(dim=1, keepdim=True)
+        row_sim = torch.log(row_sim)
+
+        # --> 1 x batch_size
+        # similarities(i, j): the similarity between the i-th image and the j-th text description
+        similarities.append(row_sim)
+
 
 def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     cnn_model.eval()
@@ -77,6 +134,9 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
 
         t_loss = image_to_text_loss(word_logits, captions)
         t_total_loss += t_loss.data
+
+        # similarity score
+        similarities = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
 
         if step == 50:
             break
