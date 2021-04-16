@@ -235,11 +235,13 @@ if __name__ == "__main__":
 
     # Get data loader ##################################################
     imsize = cfg.TREE.BASE_SIZE * (2 ** (cfg.TREE.BRANCH_NUM-1))
-    batch_size = cfg.TRAIN.BATCH_SIZE
+    #batch_size = cfg.TRAIN.BATCH_SIZE
+    batch_size = 1
     image_transform = transforms.Compose([
         transforms.Scale(int(imsize * 76 / 64)),
         transforms.RandomCrop(imsize),
         transforms.RandomHorizontalFlip()])
+    '''
     #dataset = TextDataset(cfg.DATA_DIR, 'train', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
     #dataset = TextBertDataset(cfg.DATA_DIR, 'train', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
     dataset = DevTextBertDataset(cfg.DATA_DIR, 'dev', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
@@ -249,6 +251,7 @@ if __name__ == "__main__":
     dataloader = torch.utils.data.DataLoader(
         dataset, batch_size=batch_size, drop_last=True,
         shuffle=True, num_workers=int(cfg.WORKERS))
+    '''
 
     # # validation data #
     #dataset_val = TextDataset(cfg.DATA_DIR, 'test', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
