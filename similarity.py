@@ -33,6 +33,7 @@ import pickle
 
 import tokenization
 from datasets import DevTextBertDataset
+from datasets import prepare_data_dev
 
 dir_path = (os.path.abspath(os.path.join(os.path.realpath(__file__), './.')))
 sys.path.append(dir_path)
@@ -56,7 +57,6 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
     """
     #words_emb = torch.randn(1,768, 18)
     #img_features = torch.randn(1,768,17,17)
-    img_features = words_features
 
     masks = []
     att_maps = []
@@ -117,10 +117,11 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     
     for step, data in enumerate(dataloader, 0):
         #imgs, captions, cap_lens, class_ids, keys = prepare_data(data)
-        imgs, captions, cap_lens, class_ids, keys = prepare_data_bert(data, tokenizer=None)
+        #imgs, captions, cap_lens, class_ids, keys = prepare_data_bert(data, tokenizer=None)
+        imgs, captions, cap_lens, class_ids, keys = prepare_data_dev(data)
         if(debug_flag):
             with open('./debug1.pkl', 'wb') as f:
-                pickle.dump({'imgs':imgs, 'captions':captions, 'class_ids':class_ids, 'keys':keys}, f)  
+                pickle.dump({'imgs':imgs, 'captions':captions, 'cap_lens':cap_lens, 'class_ids':class_ids, 'keys':keys}, f)  
 
         #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
         words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, cap_lens)
@@ -134,16 +135,19 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
                                             cap_lens, class_ids, batch_size)
         w_total_loss += (w_loss0 + w_loss1).data
 
+        # similarity score
+        print('calculating similarity')
+        similarities = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
+        print(similarities)
+
+        '''
         s_loss0, s_loss1 = \
             sent_loss(sent_code, sent_emb, labels, class_ids, batch_size)
         s_total_loss += (s_loss0 + s_loss1).data
 
         t_loss = image_to_text_loss(word_logits, captions)
         t_total_loss += t_loss.data
-
-        # similarity score
-        print('calculating similarity')
-        similarities = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
+        '''
 
         if step == 50:
             break
