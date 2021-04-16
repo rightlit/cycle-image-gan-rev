@@ -4,7 +4,7 @@ DATASET_NAME: 'birds'
 DATA_DIR: 'data/birds'
 GPU_ID: 0
 WORKERS: 4
-LOCAL_PRETRAINED: True
+LOCAL_PRETRAINED: False
 
 TREE:
     BRANCH_NUM: 1
@@ -13,7 +13,7 @@ TREE:
 
 TRAIN:
     FLAG: True
-    NET_E: ''  # '../DAMSMencoders/bird/text_encoder200.pth'
+    NET_E: './STREAMencoders/bird/text_encoder200.pth'
     BATCH_SIZE: 48
     MAX_EPOCH: 600
     SNAPSHOT_INTERVAL: 50

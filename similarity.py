@@ -113,9 +113,14 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     s_total_loss = 0
     w_total_loss = 0
     t_total_loss = 0
+    debug_flag = True
+    
     for step, data in enumerate(dataloader, 0):
         #imgs, captions, cap_lens, class_ids, keys = prepare_data(data)
         imgs, captions, cap_lens, class_ids, keys = prepare_data_bert(data, tokenizer=None)
+        if(debug_flag):
+            with open('./debug1.pkl', 'wb') as f:
+                pickle.dump({'imgs':imgs, 'captions':captions, 'class_ids':class_ids, 'keys':keys}, f)  
 
         #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
         words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, cap_lens)
