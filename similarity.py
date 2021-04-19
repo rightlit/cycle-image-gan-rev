@@ -63,16 +63,17 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
     masks = []
     att_maps = []
     similarities = []
-    #cap_lens = cap_lens.data.tolist()
+    cap_lens = cap_lens.data.tolist()
+
     #batch_size = 1
-    words_num = 18
-    GAMMA1= 4.0
-    GAMMA2= 5.0
+    #words_num = 18
+    #GAMMA1= 4.0
+    #GAMMA2= 5.0
     
     for i in range(batch_size):
 
         # Get the i-th text description
-        #words_num = cap_lens[i]
+        words_num = cap_lens[i]
         # -> 1 x nef x words_num
         word = words_emb[i, :, :words_num].unsqueeze(0).contiguous()
         # -> batch_size x nef x words_num
@@ -85,7 +86,8 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
             weiContext: batch x nef x words_num
             attn: batch x words_num x 17 x 17
         """
-        weiContext, attn = func_attention(word, context, GAMMA1)
+        #weiContext, attn = func_attention(word, context, GAMMA1)
+        weiContext, attn = func_attention(word, context, cfg.TRAIN.SMOOTH.GAMMA1)
         att_maps.append(attn[i].unsqueeze(0).contiguous())
         # --> batch_size x words_num x nef
         word = word.transpose(1, 2).contiguous()
@@ -100,7 +102,8 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
         row_sim = row_sim.view(batch_size, words_num)
 
         # Eq. (10)
-        row_sim.mul_(GAMMA2).exp_()
+        #row_sim.mul_(GAMMA2).exp_()
+        row_sim.mul_(cfg.TRAIN.SMOOTH.GAMMA2).exp_()
         row_sim = row_sim.sum(dim=1, keepdim=True)
         row_sim = torch.log(row_sim)
 
@@ -148,7 +151,7 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
                                             cap_lens, class_ids, batch_size)
         w_total_loss += (w_loss0 + w_loss1).data
         '''
-        
+
         # similarity score
         print('calculating similarity')
         similarities = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
