@@ -118,6 +118,10 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     debug_flag = True
     
     for step, data in enumerate(dataloader, 0):
+        if(debug_flag):
+            with open('./debug0.pkl', 'wb') as f:
+                pickle.dump({'data':data, 'cnn_model':cnn_model, 'rnn_model':rnn_model, 'labels':labels}, f)  
+
         #imgs, captions, cap_lens, class_ids, keys = prepare_data(data)
         #imgs, captions, cap_lens, class_ids, keys = prepare_data_bert(data, tokenizer=None)
         imgs, captions, cap_lens, class_ids, keys = prepare_data_dev(data)
