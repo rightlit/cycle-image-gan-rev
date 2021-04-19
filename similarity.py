@@ -143,10 +143,12 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
         hidden = rnn_model.init_hidden(batch_size)
         words_emb, sent_emb = rnn_model(captions, cap_lens, hidden)
 
+        '''
         w_loss0, w_loss1, attn = words_loss(words_features, words_emb, labels,
                                             cap_lens, class_ids, batch_size)
         w_total_loss += (w_loss0 + w_loss1).data
-
+        '''
+        
         # similarity score
         print('calculating similarity')
         similarities = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
@@ -161,14 +163,15 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
         t_total_loss += t_loss.data
         '''
 
-        if step == 50:
-            break
+        #if step == 50:
+        #    break
 
-    s_cur_loss = s_total_loss.item() / step
-    w_cur_loss = w_total_loss.item() / step
-    t_cur_loss = t_total_loss.item() / step
+    #s_cur_loss = s_total_loss.item() / step
+    #w_cur_loss = w_total_loss.item() / step
+    #t_cur_loss = t_total_loss.item() / step
 
-    return s_cur_loss, w_cur_loss, t_cur_loss
+    #return s_cur_loss, w_cur_loss, t_cur_loss
+    return similarities
 
 
 def build_models():
@@ -292,14 +295,12 @@ if __name__ == "__main__":
     # At any point you can hit Ctrl + C to break out of training early.
     try:
         lr = cfg.TRAIN.ENCODER_LR
-        if(True):
-            print('dataloader_val : ', len(dataloader_val))
-            if len(dataloader_val) > 0:
-                s_loss, w_loss, t_loss = evaluate(dataloader_val, image_encoder,
-                                          text_encoder, batch_size, labels)
-                print('| end epoch {:3d} | valid loss '
-                      '{:5.2f} {:5.2f} {:5.2f} | lr {:.5f}|'
-                      .format(epoch, s_loss, w_loss, t_loss, lr))
+        print('dataloader_val : ', len(dataloader_val))
+        if len(dataloader_val) > 0:
+            #s_loss, w_loss, t_loss = evaluate(dataloader_val, image_encoder, text_encoder, batch_size, labels)
+            similarities = evaluate(dataloader_val, image_encoder, text_encoder, batch_size, labels)
+        print('similarities : ', similarities)
+
     except KeyboardInterrupt:
         print('-' * 89)
         print('Exiting from training early')
