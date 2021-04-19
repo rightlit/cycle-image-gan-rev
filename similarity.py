@@ -129,6 +129,12 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
             with open('./debug1.pkl', 'wb') as f:
                 pickle.dump({'imgs':imgs, 'captions':captions, 'cap_lens':cap_lens, 'class_ids':class_ids, 'keys':keys}, f)  
 
+        print(imgs[-1].shape)
+        print(captions.shape, cap_lens.shape)
+        captions = captions.unsqueeze(0)
+        #cap_lens = cap_lens.unsqueeze(0)
+        print(captions.shape, cap_lens.shape)
+
         #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
         words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, cap_lens)
         # nef = words_features.size(1)
