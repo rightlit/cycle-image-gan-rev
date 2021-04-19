@@ -57,19 +57,13 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
         words_emb(query): batch x nef x seq_len
         img_features(context): batch x nef x 17 x 17
     """
-    #words_emb = torch.randn(1,768, 18)
-    #img_features = torch.randn(1,768,17,17)
-
     masks = []
     att_maps = []
     similarities = []
     cap_lens = cap_lens.data.tolist()
+    print(cap_lens)
+    #print(words_emb)
 
-    #batch_size = 1
-    #words_num = 18
-    #GAMMA1= 4.0
-    #GAMMA2= 5.0
-    
     for i in range(batch_size):
 
         # Get the i-th text description
@@ -106,11 +100,17 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
         row_sim.mul_(cfg.TRAIN.SMOOTH.GAMMA2).exp_()
         row_sim = row_sim.sum(dim=1, keepdim=True)
         row_sim = torch.log(row_sim)
+        #print(row_sim)
+        row_sim = row_sim.cpu().squeeze(0)
+        #print(row_sim.item())
 
         # --> 1 x batch_size
         # similarities(i, j): the similarity between the i-th image and the j-th text description
-        similarities.append(row_sim)
+        similarities.append(row_sim.item())
+        # average
+        avg_sim = np.avg(similarities)
 
+    return avg_sim
 
 def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     cnn_model.eval()
@@ -118,25 +118,25 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     s_total_loss = 0
     w_total_loss = 0
     t_total_loss = 0
-    debug_flag = True
+    debug_flag = False
+    similarities = []
     
     for step, data in enumerate(dataloader, 0):
+        print('dataloader step : ', step, batch_size)
         if(debug_flag):
             with open('./debug0.pkl', 'wb') as f:
                 pickle.dump({'data':data, 'cnn_model':cnn_model, 'rnn_model':rnn_model, 'labels':labels}, f)  
 
-        #imgs, captions, cap_lens, class_ids, keys = prepare_data(data)
         #imgs, captions, cap_lens, class_ids, keys = prepare_data_bert(data, tokenizer=None)
         imgs, captions, cap_lens, class_ids, keys = prepare_data_dev(data)
         if(debug_flag):
             with open('./debug1.pkl', 'wb') as f:
                 pickle.dump({'imgs':imgs, 'captions':captions, 'cap_lens':cap_lens, 'class_ids':class_ids, 'keys':keys}, f)  
 
-        print(imgs[-1].shape)
-        print(captions.shape, cap_lens.shape)
+        #print(imgs[-1].shape)
+        #print(captions.shape, cap_lens.shape)
         captions = captions.unsqueeze(0)
-        #cap_lens = cap_lens.unsqueeze(0)
-        print(captions.shape, cap_lens.shape)
+        #print(captions.shape, cap_lens.shape)
 
         #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
         words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, cap_lens)
@@ -154,24 +154,9 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
 
         # similarity score
         print('calculating similarity')
-        similarities = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
-        print(similarities)
-
-        '''
-        s_loss0, s_loss1 = \
-            sent_loss(sent_code, sent_emb, labels, class_ids, batch_size)
-        s_total_loss += (s_loss0 + s_loss1).data
-
-        t_loss = image_to_text_loss(word_logits, captions)
-        t_total_loss += t_loss.data
-        '''
-
-        #if step == 50:
-        #    break
-
-    #s_cur_loss = s_total_loss.item() / step
-    #w_cur_loss = w_total_loss.item() / step
-    #t_cur_loss = t_total_loss.item() / step
+        #print(words_features.shape, words_emb.shape)
+        words_sim = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
+        similarities.append(words_sim)
 
     #return s_cur_loss, w_cur_loss, t_cur_loss
     return similarities
