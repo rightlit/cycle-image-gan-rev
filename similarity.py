@@ -107,9 +107,11 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
         # --> 1 x batch_size
         # similarities(i, j): the similarity between the i-th image and the j-th text description
         similarities.append(row_sim.item())
-        # average
-        avg_sim = np.avg(similarities)
 
+    #average
+    print(similarities)
+    avg_sim = np.mean(similarities,axis=0)
+    print('average(batch): ', avg_sim)
     return avg_sim
 
 def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
@@ -158,8 +160,13 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
         words_sim = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
         similarities.append(words_sim)
 
+    # average
+    print(similarities)
+    avg_sim = np.mean(similarities,axis=0)
+    print('average(total): ', avg_sim)
+
     #return s_cur_loss, w_cur_loss, t_cur_loss
-    return similarities
+    return avg_sim
 
 
 def build_models():
