@@ -95,7 +95,8 @@ def prepare_data_dev(data):
             real_imgs.append(Variable(imgs[i]))
 
     captions = captions[sorted_cap_indices].squeeze()
-    captions = captions.unsqueeze(0)
+    # added code
+    #captions = captions.unsqueeze(0)
     class_ids = class_ids[sorted_cap_indices].numpy()
     # sent_indices = sent_indices[sorted_cap_indices]
     keys = [keys[i] for i in sorted_cap_indices.numpy()]
