@@ -138,6 +138,7 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
         #print(imgs[-1].shape)
         #print(captions.shape, cap_lens.shape)
         captions = captions.unsqueeze(0)
+        print(captions)
         #print(captions.shape, cap_lens.shape)
 
         #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
