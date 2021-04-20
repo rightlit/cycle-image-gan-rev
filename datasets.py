@@ -183,6 +183,8 @@ class TextDataset(Dataset):
         self.class_id = self.load_class_id(split_dir, len(self.filenames))
         self.number_example = len(self.filenames)
 
+        self.split = split
+
     def load_bbox(self):
         data_dir = self.data_dir
         #bbox_path = os.path.join(data_dir, 'CUB_200_2011', 'CUB_200_2011', 'bounding_boxes.txt')
@@ -399,8 +401,13 @@ class TextDataset(Dataset):
         img_name = '%s/images/%s.jpg' % (data_dir, key)
         imgs = self.get_imgs(img_name, self.imsize,
                         bbox, self.transform, normalize=self.norm)
+        # fix sent_ix for dev
+        if(self.split == 'dev'):
+            sent_ix = 0
         # random select a sentence
-        sent_ix = np.random.randint(0, self.embeddings_num)
+        else:
+            sent_ix = np.random.randint(0, self.embeddings_num)
+
         new_sent_ix = index * self.embeddings_num + sent_ix
         caps, cap_len = self.get_caption(new_sent_ix)
         return imgs, caps, cap_len, cls_id, key
