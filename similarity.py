@@ -9,6 +9,7 @@ from datasets import TextDataset, TextBertDataset
 from datasets import prepare_data, prepare_data_bert
 
 from model import BERT_RNN_ENCODER, BERT_CNN_ENCODER_RNN_DECODER
+from model import RNN_ENCODER, CNN_ENCODER
 
 import os
 import sys
