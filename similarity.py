@@ -144,10 +144,12 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
         print(captions)
         #print(captions.shape, cap_lens.shape)
 
+        print('evaluate(), model_type: ', model_type)
         if(model_type == 'bert'):
             words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, cap_lens)
         else:
-            words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
+            #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
+            words_features, sent_code = cnn_model(imgs[-1])
         
         # nef = words_features.size(1)
         # words_features = words_features.view(batch_size, nef, -1)
@@ -179,7 +181,7 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
 def build_models():
   
     # build model ############################################################
-
+    print('build_model(), model_type: ', model_type)
     if(model_type == 'bert'):
         #cfg.LOCAL_PRETRAINED = False
         if(cfg.LOCAL_PRETRAINED):
