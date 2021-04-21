@@ -33,6 +33,7 @@ import pickle
 
 import tokenization
 from datasets import DevTextBertDataset
+from datasets import DevTextDataset
 from datasets import prepare_data_dev
 from GlobalAttention import func_attention
 from miscc.losses import cosine_similarity
