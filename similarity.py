@@ -33,7 +33,7 @@ import pickle
 
 import tokenization
 from datasets import DevTextBertDataset
-from datasets import prepare_data_bert_dev
+from datasets import prepare_data_dev
 from GlobalAttention import func_attention
 from miscc.losses import cosine_similarity
 
@@ -131,7 +131,7 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
                 pickle.dump({'data':data, 'cnn_model':cnn_model, 'rnn_model':rnn_model, 'labels':labels}, f)  
 
         #imgs, captions, cap_lens, class_ids, keys = prepare_data_bert(data, tokenizer=None)
-        imgs, captions, cap_lens, class_ids, keys = prepare_data_bert_dev(data)
+        imgs, captions, cap_lens, class_ids, keys = prepare_data_dev(data)
         if(debug_flag):
             with open('./debug1.pkl', 'wb') as f:
                 pickle.dump({'imgs':imgs, 'captions':captions, 'cap_lens':cap_lens, 'class_ids':class_ids, 'keys':keys}, f)  
