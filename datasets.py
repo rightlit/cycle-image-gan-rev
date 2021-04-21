@@ -671,8 +671,8 @@ class DevTextDataset(TextDataset):
             test_captions = self.load_captions(data_dir, test_names)
             dev_captions = self.load_captions(data_dir, dev_names)
 
-            train_captions, test_captions, ixtoword, wordtoix, n_words = \
-                self.build_dictionary(train_captions, test_captions)
+            train_captions, test_captions, dev_captions, ixtoword, wordtoix, n_words = \
+                self.build_dictionary(train_captions, test_captions, dev_captions)
             
             #dev_captions, ixtoword, wordtoix, n_words = \
             #    self.build_dictionary(dev_captions)
@@ -683,3 +683,53 @@ class DevTextDataset(TextDataset):
 
         # return only dev captions
         return filenames, captions, ixtoword, wordtoix, n_words
+
+    def build_dictionary(self, train_captions, test_captions, dev_captions):
+
+        word_counts = defaultdict(float)
+        captions = train_captions + test_captions
+        for sent in captions:
+            for word in sent:
+                word_counts[word] += 1
+
+        vocab = [w for w in word_counts if word_counts[w] >= 0]
+
+        ixtoword = {}
+        ixtoword[0] = '<end>'
+        wordtoix = {}
+        wordtoix['<end>'] = 0
+        ix = 1
+        for w in vocab:
+            wordtoix[w] = ix
+            ixtoword[ix] = w
+            ix += 1
+
+        train_captions_new = []
+        for t in train_captions:
+            rev = []
+            for w in t:
+                if w in wordtoix:
+                    rev.append(wordtoix[w])
+            # rev.append(0)  # do not need '<end>' token
+            train_captions_new.append(rev)
+
+        test_captions_new = []
+        for t in test_captions:
+            rev = []
+            for w in t:
+                if w in wordtoix:
+                    rev.append(wordtoix[w])
+            # rev.append(0)  # do not need '<end>' token
+            test_captions_new.append(rev)
+
+        dev_captions_new = []
+        for t in dev_captions:
+            rev = []
+            for w in t:
+                if w in wordtoix:
+                    rev.append(wordtoix[w])
+            # rev.append(0)  # do not need '<end>' token
+            dev_captions_new.append(rev)
+
+        return [train_captions_new, test_captions_new, dev_captions_new.
+                ixtoword, wordtoix, len(ixtoword)]
