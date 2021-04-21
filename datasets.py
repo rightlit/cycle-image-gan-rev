@@ -731,5 +731,5 @@ class DevTextDataset(TextDataset):
             # rev.append(0)  # do not need '<end>' token
             dev_captions_new.append(rev)
 
-        return [train_captions_new, test_captions_new, dev_captions_new.
+        return [train_captions_new, test_captions_new, dev_captions_new,
                 ixtoword, wordtoix, len(ixtoword)]
