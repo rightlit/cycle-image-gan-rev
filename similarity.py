@@ -144,8 +144,11 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
         print(captions)
         #print(captions.shape, cap_lens.shape)
 
-        #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
-        words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, cap_lens)
+        if(model_type == 'bert'):
+            words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, cap_lens)
+        else:
+            words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
+        
         # nef = words_features.size(1)
         # words_features = words_features.view(batch_size, nef, -1)
 
