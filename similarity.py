@@ -48,6 +48,7 @@ def parse_args():
                         default='cfg/STREAM/bird.yaml', type=str)
     parser.add_argument('--gpu', dest='gpu_id', type=int, default=0)
     parser.add_argument('--data_dir', dest='data_dir', type=str, default='data/birds')
+    parser.add_argument('--model_type', dest='model_type', type=str, default='bert')
     parser.add_argument('--manualSeed', type=int, default=0, help='manual seed')
     args = parser.parse_args()
     return args
@@ -173,21 +174,24 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
 def build_models():
   
     # build model ############################################################
-    #cfg.LOCAL_PRETRAINED = False
-    if(cfg.LOCAL_PRETRAINED):
-        tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
-        vocab_size = len(tokenizer.vocab)
-        #vocab_size = 3770
-        #vocab_size = 4000
-    else:
-        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-        vocab_size = len(tokenizer.vocab)
-        #vocab_size = 30522
 
-    #text_encoder = BERT_RNN_ENCODER(dataset.n_words, nhidden=cfg.TEXT.EMBEDDING_DIM)
-    #image_encoder = BERT_CNN_ENCODER_RNN_DECODER(cfg.TEXT.EMBEDDING_DIM, cfg.CNN_RNN.HIDDEN_DIM, dataset.n_words, rec_unit=cfg.RNN_TYPE)
-    text_encoder = BERT_RNN_ENCODER(vocab_size, nhidden=cfg.TEXT.EMBEDDING_DIM)
-    image_encoder = BERT_CNN_ENCODER_RNN_DECODER(cfg.TEXT.EMBEDDING_DIM, cfg.CNN_RNN.HIDDEN_DIM, vocab_size, rec_unit=cfg.RNN_TYPE)
+    if(model_type == 'bert'):
+        #cfg.LOCAL_PRETRAINED = False
+        if(cfg.LOCAL_PRETRAINED):
+            tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
+            vocab_size = len(tokenizer.vocab)
+            #vocab_size = 3770
+            #vocab_size = 4000
+        else:
+            tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+            vocab_size = len(tokenizer.vocab)
+            #vocab_size = 30522
+        text_encoder = BERT_RNN_ENCODER(vocab_size, nhidden=cfg.TEXT.EMBEDDING_DIM)
+        image_encoder = BERT_CNN_ENCODER_RNN_DECODER(cfg.TEXT.EMBEDDING_DIM, cfg.CNN_RNN.HIDDEN_DIM, vocab_size, rec_unit=cfg.RNN_TYPE)
+    else:
+        vocab_size = dataset_val.n_words
+        text_encoder = RNN_ENCODER(vocab_size, nhidden=cfg.TEXT.EMBEDDING_DIM)
+        image_encoder = CNN_ENCODER(cfg.TEXT.EMBEDDING_DIM)
 
     labels = Variable(torch.LongTensor(range(batch_size)))
     start_epoch = 0
@@ -239,6 +243,8 @@ if __name__ == "__main__":
     if cfg.CUDA:
         torch.cuda.manual_seed_all(args.manualSeed)
 
+    model_type = args.model_type
+
     ##########################################################################
     now = datetime.datetime.now(dateutil.tz.tzlocal())
     timestamp = now.strftime('%Y_%m_%d_%H_%M_%S')
@@ -276,7 +282,13 @@ if __name__ == "__main__":
     # # validation data #
     #dataset_val = TextDataset(cfg.DATA_DIR, 'test', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
     #dataset_val = TextBertDataset(cfg.DATA_DIR, 'test', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
-    dataset_val = DevTextBertDataset(cfg.DATA_DIR, 'dev', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
+    #model_type = 'attn'
+
+    if(model_type == 'bert'):
+        dataset_val = DevTextBertDataset(cfg.DATA_DIR, 'dev', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
+    else:
+        dataset_val = DevTextDataset(cfg.DATA_DIR, 'dev', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
+
     dataloader_val = torch.utils.data.DataLoader(
         dataset_val, batch_size=batch_size, drop_last=True,
         shuffle=True, num_workers=int(cfg.WORKERS))

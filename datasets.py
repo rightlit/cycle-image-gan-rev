@@ -613,3 +613,73 @@ class DevTextBertDataset(TextDataset):
 
         return [dev_captions_new,
                 ixtoword, wordtoix, len(ixtoword)]
+
+# added DevTextBert
+class DevTextDataset(TextDataset):
+    """
+    Text Dataset
+    Based on:
+        https://github.com/taoxugit/AttnGAN/blob/master/code/datasets.py
+    
+    tokenizer = RegexpTokenizer(r'\w+')
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)        # Load pre-trained model tokenizer (vocabulary)
+
+    def load_captions(self, data_dir, filenames):
+        all_captions = []
+        for i in range(len(filenames)):
+            cap_path = '%s/text/%s.txt' % (data_dir, filenames[i])
+            with open(cap_path, "r") as f:
+                captions = f.read().split('\n')
+                cnt = 0
+                for cap in captions:
+                    if len(cap) == 0:
+                        continue
+                    # picks out sequences of alphanumeric characters as tokens
+                    # and drops everything else
+                    tokens = self.tokenizer.tokenize(cap.lower())
+                    # print('tokens', tokens)
+                    if len(tokens) == 0:
+                        print('cap', cap)
+                        continue
+
+                    tokens_new = []
+                    for t in tokens:
+                        t = t.encode('ascii', 'ignore').decode('ascii')
+                        if len(t) > 0:
+                            tokens_new.append(t)
+                    all_captions.append(tokens_new)
+                    cnt += 1
+                    if cnt == self.embeddings_num:
+                        break
+                if cnt < self.embeddings_num:
+                    print('ERROR: the captions for %s less than %d'
+                          % (filenames[i], cnt))
+
+        return all_captions
+
+    def load_text_data(self, data_dir, split):
+        train_names = self.load_filenames(data_dir, 'train')
+        test_names = self.load_filenames(data_dir, 'test')
+        dev_names = self.load_filenames(data_dir, 'dev')
+        #filepath = os.path.join(data_dir, 'dev_bert_captions.pickle')
+        
+        if True:
+            train_captions = self.load_captions(data_dir, train_names)
+            test_captions = self.load_captions(data_dir, test_names)
+            dev_captions = self.load_captions(data_dir, dev_names)
+
+            train_captions, test_captions, ixtoword, wordtoix, n_words = \
+                self.build_dictionary(train_captions, test_captions)
+            
+            #dev_captions, ixtoword, wordtoix, n_words = \
+            #    self.build_dictionary(dev_captions)
+
+        if(True): # split == 'dev':
+            captions = dev_captions
+            filenames = dev_names
+
+        # return only dev captions
+        return filenames, captions, ixtoword, wordtoix, n_words
