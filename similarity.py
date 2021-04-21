@@ -10,6 +10,7 @@ from datasets import prepare_data, prepare_data_bert
 
 from model import BERT_RNN_ENCODER, BERT_CNN_ENCODER_RNN_DECODER
 from model import RNN_ENCODER, CNN_ENCODER
+from model import CNN_ENCODER_RNN_DECODER
 
 import os
 import sys
@@ -148,7 +149,6 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
         if(model_type == 'bert'):
             words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, cap_lens)
         else:
-            #words_features, sent_code, word_logits = cnn_model(imgs[-1], captions)
             words_features, sent_code = cnn_model(imgs[-1])
         
         # nef = words_features.size(1)
@@ -172,7 +172,8 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     # average
     print(similarities)
     avg_sim = np.mean(similarities,axis=0)
-    print('average(total): ', avg_sim)
+    std_sim = np.std(similarities,axis=0)
+    print('average(total), std: ', avg_sim, std_sim)
 
     #return s_cur_loss, w_cur_loss, t_cur_loss
     return avg_sim
