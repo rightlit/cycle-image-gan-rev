@@ -79,7 +79,7 @@ def prepare_data_bert(data, tokenizer):
             class_ids, keys]
 
 # added code
-def prepare_data_dev(data):
+def prepare_data_bert_dev(data):
     imgs, captions, captions_lens, class_ids, keys = data
 
     # sort data by the length in a decreasing order
