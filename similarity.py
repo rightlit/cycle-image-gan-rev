@@ -52,6 +52,7 @@ def parse_args():
     parser.add_argument('--gpu', dest='gpu_id', type=int, default=0)
     parser.add_argument('--data_dir', dest='data_dir', type=str, default='data/birds')
     parser.add_argument('--model_type', dest='model_type', type=str, default='bert')
+    parser.add_argument('--local_pretrained', dest='local_pretrained', type=int, default=0)
     parser.add_argument('--manualSeed', type=int, default=0, help='manual seed')
     args = parser.parse_args()
     return args
@@ -252,6 +253,10 @@ if __name__ == "__main__":
         torch.cuda.manual_seed_all(args.manualSeed)
 
     model_type = args.model_type
+
+    cfg.LOCAL_PRETRAINED = False
+    if(args.local_pretrained == 1):
+        cfg.LOCAL_PRETRAINED = True
 
     ##########################################################################
     now = datetime.datetime.now(dateutil.tz.tzlocal())
