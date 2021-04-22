@@ -430,14 +430,6 @@ class TextBertDataset(TextDataset):
     https://github.com/huggingface/pytorch-pretrained-BERT
     """
 
-   '''
-   if(cfg.LOCAL_PRETRAINED):
-        tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
-    else:
-        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    print('tokenizer loaded, vocab_size: ', len(tokenizer.vocab), cfg.LOCAL_PRETRAINED)
-    '''
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        # Load pre-trained model tokenizer (vocabulary)
 
@@ -541,14 +533,7 @@ class DevTextBertDataset(TextDataset):
     Text dataset on Bert
     https://github.com/huggingface/pytorch-pretrained-BERT
     """
-   '''
-   if(cfg.LOCAL_PRETRAINED):
-        tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
-    else:
-        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    print('tokenizer loaded, vocab_size: ', len(tokenizer.vocab), cfg.LOCAL_PRETRAINED)
-    '''
-
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        # Load pre-trained model tokenizer (vocabulary)
 
