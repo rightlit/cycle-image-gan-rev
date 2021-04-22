@@ -65,7 +65,7 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
     att_maps = []
     similarities = []
     cap_lens = cap_lens.data.tolist()
-    print(cap_lens)
+    #print(cap_lens)
     #print(words_emb)
 
     for i in range(batch_size):
@@ -142,7 +142,7 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
         #print(imgs[-1].shape)
         #print(captions.shape, cap_lens.shape)
         captions = captions.unsqueeze(0)
-        print(captions)
+        print(captions, cap_lens)
         #print(captions.shape, cap_lens.shape)
 
         print('evaluate(), model_type: ', model_type)
