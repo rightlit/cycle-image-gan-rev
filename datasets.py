@@ -179,6 +179,7 @@ class TextDataset(Dataset):
             print('TextDataset loaded, tokenizer = RegexpTokenizer')
         else:
             self.tokenizer = tokenizer
+            print('TextDataset loaded, tokenizer = BertTokenizer(vocab)', len(tokenizer.vocab))
 
         self.filenames, self.captions, self.ixtoword, \
             self.wordtoix, self.n_words = self.load_text_data(data_dir, split)
@@ -547,7 +548,7 @@ class DevTextBertDataset(TextDataset):
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     print('tokenizer loaded, vocab_size: ', len(tokenizer.vocab), cfg.LOCAL_PRETRAINED)
     '''
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        # Load pre-trained model tokenizer (vocabulary)
 
