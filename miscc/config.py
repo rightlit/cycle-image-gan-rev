@@ -22,7 +22,8 @@ __C.RNN_TYPE = 'LSTM'   # 'GRU'
 __C.B_VALIDATION = False
 
 # added code
-__C.LOCAL_PRETRAINED = True
+#__C.LOCAL_PRETRAINED = True
+__C.LOCAL_PRETRAINED = False
 
 __C.TREE = edict()
 __C.TREE.BRANCH_NUM = 3

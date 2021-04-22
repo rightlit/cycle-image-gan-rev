@@ -151,10 +151,9 @@ class TextDataset(Dataset):
     Based on:
         https://github.com/taoxugit/AttnGAN/blob/master/code/datasets.py
     """
-    tokenizer = RegexpTokenizer(r'\w+')
     def __init__(self, data_dir, split='train',
                  base_size=64,
-                 transform=None, target_transform=None):
+                 transform=None, target_transform=None, tokenizer=None):
         self.transform = transform
         self.norm = transforms.Compose([
             transforms.ToTensor(),
@@ -174,6 +173,12 @@ class TextDataset(Dataset):
         else:
             self.bbox = None
         split_dir = os.path.join(data_dir, split)
+        
+        if(tokenizer == None):
+            self.tokenizer = RegexpTokenizer(r'\w+')
+            print('TextDataset loaded, tokenizer = RegexpTokenizer')
+        else:
+            self.tokenizer = tokenizer
 
         self.filenames, self.captions, self.ixtoword, \
             self.wordtoix, self.n_words = self.load_text_data(data_dir, split)
@@ -423,10 +428,14 @@ class TextBertDataset(TextDataset):
     Text dataset on Bert
     https://github.com/huggingface/pytorch-pretrained-BERT
     """
-    if(cfg.LOCAL_PRETRAINED):
+
+   '''
+   if(cfg.LOCAL_PRETRAINED):
         tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
     else:
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    print('tokenizer loaded, vocab_size: ', len(tokenizer.vocab), cfg.LOCAL_PRETRAINED)
+    '''
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        # Load pre-trained model tokenizer (vocabulary)
@@ -504,6 +513,7 @@ class TextBertDataset(TextDataset):
         ixtoword = {}
         wordtoix = {}
 
+        print('build_dictionary(), tokenizer(vocab): ', len(self.tokenizer.vocab), cfg.LOCAL_PRETRAINED)
 
         train_captions_new = []
         for sent in train_captions:
@@ -530,11 +540,14 @@ class DevTextBertDataset(TextDataset):
     Text dataset on Bert
     https://github.com/huggingface/pytorch-pretrained-BERT
     """
-    if(cfg.LOCAL_PRETRAINED):
+   '''
+   if(cfg.LOCAL_PRETRAINED):
         tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
     else:
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-
+    print('tokenizer loaded, vocab_size: ', len(tokenizer.vocab), cfg.LOCAL_PRETRAINED)
+    '''
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        # Load pre-trained model tokenizer (vocabulary)
 
@@ -600,6 +613,7 @@ class DevTextBertDataset(TextDataset):
         ixtoword = {}
         wordtoix = {}
 
+        print('build_dictionary(), tokenizer(vocab): ', len(self.tokenizer.vocab), cfg.LOCAL_PRETRAINED)
 
         dev_captions_new = []
         for sent in dev_captions:
