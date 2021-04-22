@@ -467,24 +467,19 @@ class TextBertDataset(TextDataset):
         test_names = self.load_filenames(data_dir, 'test')
         filepath = os.path.join(data_dir, 'bert_captions.pickle')
         
-        if not os.path.isfile(filepath):
+        #if not os.path.isfile(filepath):
+        if(True):
             train_captions = self.load_captions(data_dir, train_names)
             test_captions = self.load_captions(data_dir, test_names)
 
             train_captions, test_captions, ixtoword, wordtoix, n_words = \
                 self.build_dictionary(train_captions, test_captions)
+            
+            # always newly generating
             with open(filepath, 'wb') as f:
                 pickle.dump([train_captions, test_captions,
                              ixtoword, wordtoix], f, protocol=2)
                 print('Save to: ', filepath)
-        else:
-            with open(filepath, 'rb') as f:
-                x = pickle.load(f)
-                train_captions, test_captions = x[0], x[1]
-                ixtoword, wordtoix = x[2], x[3]
-                del x
-                n_words = len(ixtoword)
-                print('Load from: ', filepath)
 
         if split == 'train':
             # a list of list: each list contains
