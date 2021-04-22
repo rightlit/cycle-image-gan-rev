@@ -409,7 +409,7 @@ class TextDataset(Dataset):
         new_sent_ix = index * self.embeddings_num + sent_ix
         caps, cap_len = self.get_caption(new_sent_ix)
         
-        print('caption: ', self.split, sent_ix, new_sent_ix, np.squeeze(caps), cap_len.item())
+        print('caption: ', self.split, sent_ix, new_sent_ix, np.squeeze(caps), cap_len)
         
         return imgs, caps, cap_len, cls_id, key
 
