@@ -93,10 +93,14 @@ def sent_probability(cnn_code, rnn_code, labels, class_ids,
     scores1 = scores0.transpose(0, 1)
  
     if labels is not None:
-        #loss0 = nn.CrossEntropyLoss()(scores0, labels)
-        #loss1 = nn.CrossEntropyLoss()(scores1, labels)
-        loss0 = nn.CrossEntropyLoss()(scores0, labels.unsqueeze(0))
-        loss1 = nn.CrossEntropyLoss()(scores1, labels.unsqueeze(0))
+        scores0 = scores0.squeeze(0).squeeze(0)
+        scores0 = scores0.repeat(1,2)
+
+        scores1 = scores1.squeeze(0).squeeze(0)
+        scores1 = scores1.repeat(1,2)
+        
+        loss0 = nn.CrossEntropyLoss()(scores0, labels)
+        loss1 = nn.CrossEntropyLoss()(scores1, labels)
     else:
         loss0, loss1 = None, None
     return loss0, loss1
@@ -170,7 +174,7 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     s_total_loss = 0
     w_total_loss = 0
     t_total_loss = 0
-    
+
     s_total_loss0 = 0
     s_total_loss1 = 0
     
