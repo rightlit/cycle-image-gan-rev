@@ -87,14 +87,16 @@ def sent_probability(cnn_code, rnn_code, labels, class_ids,
     scores0 = scores0 / norm0.clamp(min=eps) * cfg.TRAIN.SMOOTH.GAMMA3
 
     # --> batch_size x batch_size
-    scores0 = scores0.squeeze()
-    if class_ids is not None:
-        scores0.data.masked_fill_(masks, -float('inf'))
+    #scores0 = scores0.squeeze()
+    #if class_ids is not None:
+    #    scores0.data.masked_fill_(masks, -float('inf'))
     scores1 = scores0.transpose(0, 1)
  
     if labels is not None:
-        loss0 = nn.CrossEntropyLoss()(scores0, labels)
-        loss1 = nn.CrossEntropyLoss()(scores1, labels)
+        #loss0 = nn.CrossEntropyLoss()(scores0, labels)
+        #loss1 = nn.CrossEntropyLoss()(scores1, labels)
+        loss0 = nn.CrossEntropyLoss()(scores0, labels.unsqueeze(0))
+        loss1 = nn.CrossEntropyLoss()(scores1, labels.unsqueeze(0))
     else:
         loss0, loss1 = None, None
     return loss0, loss1
@@ -164,12 +166,18 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
 def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     cnn_model.eval()
     rnn_model.eval()
+
     s_total_loss = 0
     w_total_loss = 0
     t_total_loss = 0
-    debug_flag = False
-    similarities = []
     
+    s_total_loss0 = 0
+    s_total_loss1 = 0
+    
+    #debug_flag = False
+    debug_flag = True
+    similarities = []
+
     for step, data in enumerate(dataloader, 0):
         print('dataloader step : ', step, batch_size)
         if(debug_flag):
@@ -211,6 +219,10 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
         #print(words_features.shape, words_emb.shape)
         words_sim = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
         similarities.append(words_sim)
+
+        if(debug_flag):
+            with open('./debug3.pkl', 'wb') as f:
+                pickle.dump({'sent_code':sent_code, 'sent_emb':sent_emb, 'labels':labels, 'class_ids':class_ids, 'batch_size':batch_size}, f)  
 
         s_loss0, s_loss1 = sent_probability(sent_code, sent_emb, labels, class_ids, batch_size)
         s_total_loss0 += s_loss0.data
