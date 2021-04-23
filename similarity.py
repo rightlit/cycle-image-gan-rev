@@ -161,11 +161,33 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
         # similarities(i, j): the similarity between the i-th image and the j-th text description
         similarities.append(row_sim.item())
 
+    # batch_size x batch_size
+    similarities = torch.cat(similarities, 1)
+    if class_ids is not None:
+        masks = np.concatenate(masks, 0)
+        # masks: batch_size x batch_size
+        masks = torch.ByteTensor(masks)
+        if cfg.CUDA:
+            masks = masks.cuda()
+
+    similarities = similarities * cfg.TRAIN.SMOOTH.GAMMA3
+    if class_ids is not None:
+        similarities.data.masked_fill_(masks, -float('inf'))
+    similarities1 = similarities.transpose(0, 1)
+    if labels is not None:
+        loss0 = nn.CrossEntropyLoss()(similarities, labels)
+        loss1 = nn.CrossEntropyLoss()(similarities1, labels)
+    else:
+        loss0, loss1 = None, None
+    return loss0, loss1
+
+    '''
     #average
     print(similarities)
     avg_sim = np.mean(similarities,axis=0)
     print('average(batch): ', avg_sim)
     return avg_sim
+    '''
 
 def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     cnn_model.eval()
@@ -177,7 +199,9 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
 
     s_total_loss0 = 0
     s_total_loss1 = 0
-    
+    w_total_loss0 = 0
+    w_total_loss1 = 0
+   
     #debug_flag = False
     debug_flag = True
     similarities = []
@@ -222,8 +246,19 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
         # similarity score
         print('calculating similarity')
         #print(words_features.shape, words_emb.shape)
-        words_sim = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
-        similarities.append(words_sim)
+        #words_sim = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
+        #similarities.append(words_sim)
+
+        w_loss0, w_loss1 = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
+
+        w_total_loss0 += w_loss0.data
+        w_total_loss1 += w_loss1.data
+        #loss = w_loss0 + w_loss1
+        w_cur_loss0 = w_total_loss0.item()
+        w_cur_loss1 = w_total_loss1.item()
+        w_cur_loss = w_cur_loss0 + w_cur_loss1
+        print('w_cur_loss = ', w_cur_loss, w_cur_loss0, w_cur_loss1)
+        similarities.append(w_cur_loss)
 
         if(debug_flag):
             with open('./debug3.pkl', 'wb') as f:
