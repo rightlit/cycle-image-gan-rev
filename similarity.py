@@ -98,7 +98,7 @@ def sent_probability(cnn_code, rnn_code, labels, class_ids,
 
         scores1 = scores1.squeeze(0).squeeze(0)
         scores1 = scores1.repeat(1,2)
-        
+
         loss0 = nn.CrossEntropyLoss()(scores0, labels)
         loss1 = nn.CrossEntropyLoss()(scores1, labels)
     else:
@@ -181,6 +181,7 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     #debug_flag = False
     debug_flag = True
     similarities = []
+    probabilities = []
 
     for step, data in enumerate(dataloader, 0):
         print('dataloader step : ', step, batch_size)
@@ -235,14 +236,19 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
         s_cur_loss0 = s_total_loss0.item()
         s_cur_loss1 = s_total_loss1.item()
         s_cur_loss = s_cur_loss0 + s_cur_loss1
-        print('s_cur_loss = ', s_cur_loss)
+        print('s_cur_loss = ', s_cur_loss, s_cur_loss0, s_cur_loss1)
+        probabilities.append(s_cur_loss/2)
 
     # average
     print(similarities)
     avg_sim = np.mean(similarities,axis=0)
     std_sim = np.std(similarities,axis=0)
-    print('average(total), std: ', avg_sim, std_sim)
+    print('similarities average(total), std: ', avg_sim, std_sim)
 
+    avg_prob = np.mean(probabilities,axis=0)
+    std_prob = np.std(probabilities,axis=0)
+    print('probabilities average(total), std: ', avg_prob, std_prob)
+    
     #return s_cur_loss, w_cur_loss, t_cur_loss
     return avg_sim
 
