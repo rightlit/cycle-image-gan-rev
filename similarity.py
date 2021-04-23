@@ -305,7 +305,7 @@ if __name__ == "__main__":
 
     model_type = args.model_type
 
-    cfg.LOCAL_PRETRAINED = False
+    #cfg.LOCAL_PRETRAINED = False
     if(args.local_pretrained == 1):
         cfg.LOCAL_PRETRAINED = True
 
