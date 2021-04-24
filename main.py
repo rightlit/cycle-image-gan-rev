@@ -141,18 +141,21 @@ if __name__ == "__main__":
         transforms.Scale(int(imsize * 76 / 64)),
         transforms.RandomCrop(imsize),
         transforms.RandomHorizontalFlip()])
-    #dataset = TextDataset(cfg.DATA_DIR, split_dir, base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
-    dataset = TextBertDataset(cfg.DATA_DIR, split_dir, base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
-    assert dataset
-    dataloader = torch.utils.data.DataLoader(
-        dataset, batch_size=cfg.TRAIN.BATCH_SIZE,
-        drop_last=True, shuffle=bshuffle, num_workers=int(cfg.WORKERS))
 
     if(cfg.LOCAL_PRETRAINED):
         tokenizer = tokenization.FullTokenizer(vocab_file=cfg.BERT_ENCODER.VOCAB, do_lower_case=True)
     else:
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     vocab_size = len(tokenizer.vocab)
+
+    #dataset = TextDataset(cfg.DATA_DIR, split_dir, base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
+    #dataset = TextBertDataset(cfg.DATA_DIR, split_dir, base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
+    dataset = TextBertDataset(cfg.DATA_DIR, split_dir, base_size=cfg.TREE.BASE_SIZE, transform=image_transform, tokenizer=tokenizer)
+
+    assert dataset
+    dataloader = torch.utils.data.DataLoader(
+        dataset, batch_size=cfg.TRAIN.BATCH_SIZE,
+        drop_last=True, shuffle=bshuffle, num_workers=int(cfg.WORKERS))
 
     #rev = tokenizer.convert_tokens_to_ids(tokens)
 
