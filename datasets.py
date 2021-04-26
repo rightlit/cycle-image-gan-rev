@@ -153,7 +153,7 @@ class TextDataset(Dataset):
     """
     def __init__(self, data_dir, split='train',
                  base_size=64,
-                 transform=None, target_transform=None, tokenizer=None):
+                 transform=None, target_transform=None, tokenizer=None, cap_indices=None):
         self.transform = transform
         self.norm = transforms.Compose([
             transforms.ToTensor(),
@@ -188,6 +188,7 @@ class TextDataset(Dataset):
         self.number_example = len(self.filenames)
 
         self.split = split
+        self.cap_indices = cap_indices
 
     def load_bbox(self):
         data_dir = self.data_dir
@@ -407,7 +408,8 @@ class TextDataset(Dataset):
                         bbox, self.transform, normalize=self.norm)
         # fix sent_ix for dev
         if(self.split == 'dev'):
-            sent_ix = 0
+            #sent_ix = 0
+            sent_ix = self.cap_indices[index]
         # random select a sentence
         else:
             sent_ix = np.random.randint(0, self.embeddings_num)
