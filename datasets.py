@@ -153,7 +153,7 @@ class TextDataset(Dataset):
     """
     def __init__(self, data_dir, split='train',
                  base_size=64,
-                 transform=None, target_transform=None, tokenizer=None, cap_indices=None):
+                 transform=None, target_transform=None, tokenizer=None, cap_indices=cap_indices):
         self.transform = transform
         self.norm = transforms.Compose([
             transforms.ToTensor(),
@@ -188,7 +188,8 @@ class TextDataset(Dataset):
         self.number_example = len(self.filenames)
 
         self.split = split
-        self.cap_indices = cap_indices
+        if(cap_indics != None):
+            self.cap_indices = cap_indices
 
     def load_bbox(self):
         data_dir = self.data_dir
