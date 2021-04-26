@@ -86,24 +86,10 @@ def sent_probability(cnn_code, rnn_code, labels, class_ids,
     norm0 = torch.bmm(cnn_code_norm, rnn_code_norm.transpose(1, 2))
     scores0 = scores0 / norm0.clamp(min=eps) * cfg.TRAIN.SMOOTH.GAMMA3
 
-    # --> batch_size x batch_size
-    #scores0 = scores0.squeeze()
-    #if class_ids is not None:
-    #    scores0.data.masked_fill_(masks, -float('inf'))
-    scores1 = scores0.transpose(0, 1)
- 
-    if labels is not None:
-        scores0 = scores0.squeeze(0).squeeze(0)
-        scores0 = scores0.repeat(1,2)
-
-        scores1 = scores1.squeeze(0).squeeze(0)
-        scores1 = scores1.repeat(1,2)
-
-        loss0 = nn.CrossEntropyLoss()(scores0, labels)
-        loss1 = nn.CrossEntropyLoss()(scores1, labels)
-    else:
-        loss0, loss1 = None, None
-    return loss0, loss1
+    scores0 = scores0.squeeze()
+    print('scores0 = ', scores0)
+    sent_prob = scores0.item()
+    return sent_prob
 
 def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch_size):
     """
@@ -161,33 +147,11 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
         # similarities(i, j): the similarity between the i-th image and the j-th text description
         similarities.append(row_sim.item())
 
-    # batch_size x batch_size
-    similarities = torch.cat(similarities, 1)
-    if class_ids is not None:
-        masks = np.concatenate(masks, 0)
-        # masks: batch_size x batch_size
-        masks = torch.ByteTensor(masks)
-        if cfg.CUDA:
-            masks = masks.cuda()
-
-    similarities = similarities * cfg.TRAIN.SMOOTH.GAMMA3
-    if class_ids is not None:
-        similarities.data.masked_fill_(masks, -float('inf'))
-    similarities1 = similarities.transpose(0, 1)
-    if labels is not None:
-        loss0 = nn.CrossEntropyLoss()(similarities, labels)
-        loss1 = nn.CrossEntropyLoss()(similarities1, labels)
-    else:
-        loss0, loss1 = None, None
-    return loss0, loss1
-
-    '''
     #average
     print(similarities)
     avg_sim = np.mean(similarities,axis=0)
     print('average(batch): ', avg_sim)
     return avg_sim
-    '''
 
 def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     cnn_model.eval()
@@ -246,33 +210,15 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
         # similarity score
         print('calculating similarity')
         #print(words_features.shape, words_emb.shape)
-        #words_sim = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
-        #similarities.append(words_sim)
-
-        w_loss0, w_loss1 = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
-
-        w_total_loss0 += w_loss0.data
-        w_total_loss1 += w_loss1.data
-        #loss = w_loss0 + w_loss1
-        w_cur_loss0 = w_total_loss0.item()
-        w_cur_loss1 = w_total_loss1.item()
-        w_cur_loss = w_cur_loss0 + w_cur_loss1
-        print('w_cur_loss = ', w_cur_loss, w_cur_loss0, w_cur_loss1)
-        similarities.append(w_cur_loss)
+        words_sim = words_similarity(words_features, words_emb, labels, cap_lens, class_ids, batch_size)
+        similarities.append(words_sim)
 
         if(debug_flag):
             with open('./debug3.pkl', 'wb') as f:
                 pickle.dump({'sent_code':sent_code, 'sent_emb':sent_emb, 'labels':labels, 'class_ids':class_ids, 'batch_size':batch_size}, f)  
 
-        s_loss0, s_loss1 = sent_probability(sent_code, sent_emb, labels, class_ids, batch_size)
-        s_total_loss0 += s_loss0.data
-        s_total_loss1 += s_loss1.data
-
-        s_cur_loss0 = s_total_loss0.item()
-        s_cur_loss1 = s_total_loss1.item()
-        s_cur_loss = s_cur_loss0 + s_cur_loss1
-        print('s_cur_loss = ', s_cur_loss, s_cur_loss0, s_cur_loss1)
-        probabilities.append(s_cur_loss/2)
+        sent_prob = sent_probability(sent_code, sent_emb, labels, class_ids, batch_size)
+        probabilities.append(sent_prob)
 
     # average
     print(similarities)
