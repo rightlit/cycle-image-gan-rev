@@ -153,7 +153,7 @@ class TextDataset(Dataset):
     """
     def __init__(self, data_dir, split='train',
                  base_size=64,
-                 transform=None, target_transform=None, tokenizer=None, cap_indices=cap_indices):
+                 transform=None, target_transform=None, tokenizer=None, cap_indices=None):
         self.transform = transform
         self.norm = transforms.Compose([
             transforms.ToTensor(),
