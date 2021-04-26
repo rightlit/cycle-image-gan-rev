@@ -345,7 +345,8 @@ if __name__ == "__main__":
     #dataset_val = TextBertDataset(cfg.DATA_DIR, 'test', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
     #model_type = 'attn'
 
-    cap_indices = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    #cap_indices = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    cap_indices = [2, 1, 3, 7, 3, 6, 2, 1, 6, 5]
 
     if(model_type == 'bert'):
         #dataset_val = DevTextBertDataset(cfg.DATA_DIR, 'dev', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
