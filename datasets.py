@@ -188,7 +188,7 @@ class TextDataset(Dataset):
         self.number_example = len(self.filenames)
 
         self.split = split
-        if(cap_indics != None):
+        if(cap_indices != None):
             self.cap_indices = cap_indices
 
     def load_bbox(self):
