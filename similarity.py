@@ -395,7 +395,7 @@ if __name__ == "__main__":
     else:
         #dataset_val = DevTextDataset(cfg.DATA_DIR, 'dev', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
         #dataset_val = DevTextDataset(cfg.DATA_DIR, 'dev', base_size=cfg.TREE.BASE_SIZE, transform=image_transform, tokenizer=None)
-        dataset_val = DevTextDataset(cfg.DATA_DIR, 'dev', base_size=cfg.TREE.BASE_SIZE, transform=image_transform, tokenizer=None, cap_indices=None)
+        dataset_val = DevTextDataset(cfg.DATA_DIR, 'dev', base_size=cfg.TREE.BASE_SIZE, transform=image_transform, tokenizer=None, cap_indices=cap_indices)
 
     dataloader_val = torch.utils.data.DataLoader(
         dataset_val, batch_size=batch_size, drop_last=True,
