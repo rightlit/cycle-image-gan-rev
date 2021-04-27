@@ -409,8 +409,8 @@ class TextDataset(Dataset):
                         bbox, self.transform, normalize=self.norm)
         # fix sent_ix for dev
         if(self.split == 'dev'):
-            #sent_ix = 0
-            sent_ix = self.cap_indices[index]
+            sent_ix = 0
+            #sent_ix = self.cap_indices[index]
         # random select a sentence
         else:
             sent_ix = np.random.randint(0, self.embeddings_num)
