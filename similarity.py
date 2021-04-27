@@ -151,7 +151,7 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
     # batch_size x batch_size
     similarities = torch.cat(similarities, 1)
     similarities = similarities * cfg.TRAIN.SMOOTH.GAMMA3
-    #similarities = similarities.data.tolist()
+    similarities = similarities.numpy()
 
     #average
     print(similarities)
