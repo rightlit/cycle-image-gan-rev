@@ -139,13 +139,19 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
         row_sim.mul_(cfg.TRAIN.SMOOTH.GAMMA2).exp_()
         row_sim = row_sim.sum(dim=1, keepdim=True)
         row_sim = torch.log(row_sim)
-        #print(row_sim)
-        row_sim = row_sim.cpu().squeeze(0)
+        print(row_sim)
+        #row_sim = row_sim.cpu().squeeze(0)
         #print(row_sim.item())
 
         # --> 1 x batch_size
         # similarities(i, j): the similarity between the i-th image and the j-th text description
-        similarities.append(row_sim.item())
+        #similarities.append(row_sim.item())
+        similarities.append(row_sim)
+
+    # batch_size x batch_size
+    similarities = torch.cat(similarities, 1)
+    similarities = similarities * cfg.TRAIN.SMOOTH.GAMMA3
+    #similarities = similarities.data.tolist()
 
     #average
     print(similarities)
