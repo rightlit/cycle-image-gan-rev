@@ -190,8 +190,8 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
                 pickle.dump({'imgs':imgs, 'captions':captions, 'cap_lens':cap_lens, 'class_ids':class_ids, 'keys':keys}, f)  
 
         #print(imgs[-1].shape)
-        #print(captions.shape, cap_lens.shape)
-        captions = captions.unsqueeze(0)
+        print(captions.shape, cap_lens.shape)
+        #captions = captions.unsqueeze(0)
         print(captions, cap_lens)
         #print(captions.shape, cap_lens.shape)
 
