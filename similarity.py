@@ -88,6 +88,16 @@ def sent_probability(cnn_code, rnn_code, labels, class_ids,
 
     scores0 = scores0.squeeze()
     print('scores0 = ', scores0)
+    scores1 = scores0.transpose(0, 1)
+    if labels is not None:
+        loss0 = nn.CrossEntropyLoss()(scores0, labels)
+        loss1 = nn.CrossEntropyLoss()(scores1, labels)
+    else:
+        loss0, loss1 = None, None
+    
+    s_loss = (loss0 + loss1) * cfg.TRAIN.SMOOTH.LAMBDA   
+    print('s_loss = ', s_loss.item())
+
     #sent_prob = scores0.item()
     sent_prob = scores0.detach().cpu().numpy()
     #print(sent_prob)
