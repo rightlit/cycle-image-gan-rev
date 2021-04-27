@@ -90,8 +90,9 @@ def sent_probability(cnn_code, rnn_code, labels, class_ids,
     print('scores0 = ', scores0)
     #sent_prob = scores0.item()
     sent_prob = scores0.detach().cpu().numpy()
-    print(sent_prob)
+    #print(sent_prob)
     avg_prob = np.mean(sent_prob,axis=0)
+    print('probabilities average: ', avg_prob)
     return avg_prob
 
 def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch_size):
@@ -153,13 +154,24 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
 
     # batch_size x batch_size
     similarities = torch.cat(similarities, 1)
-    #similarities = similarities * cfg.TRAIN.SMOOTH.GAMMA3
-    similarities = similarities.detach().cpu().numpy()
+    #similarities = similarities.detach().cpu().numpy()
+
+    similarities = similarities * cfg.TRAIN.SMOOTH.GAMMA3
+    similarities1 = similarities.transpose(0, 1)
+    if labels is not None:
+        loss0 = nn.CrossEntropyLoss()(similarities, labels)
+        loss1 = nn.CrossEntropyLoss()(similarities1, labels)
+    else:
+        loss0, loss1 = None, None
+    
+    w_loss = (loss0 + loss1) * cfg.TRAIN.SMOOTH.LAMBDA   
+    print('w_loss = ', w_loss.item())
 
     #average
     print(similarities)
-    avg_sim = np.mean(similarities,axis=0)
-    print('average(batch): ', avg_sim)
+    words_sim = similarities.detach().cpu().numpy()
+    avg_sim = np.mean(words_sim,axis=0)
+    print('similarities average(batch): ', avg_sim)
     return avg_sim
 
 def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
