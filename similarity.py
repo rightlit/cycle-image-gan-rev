@@ -88,8 +88,11 @@ def sent_probability(cnn_code, rnn_code, labels, class_ids,
 
     scores0 = scores0.squeeze()
     print('scores0 = ', scores0)
-    sent_prob = scores0.item()
-    return sent_prob
+    #sent_prob = scores0.item()
+    sent_prob = scores0.detach().cpu().numpy()
+    print(sent_prob)
+    avg_prob = np.mean(sent_prob,axis=0)
+    return avg_prob
 
 def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch_size):
     """
@@ -150,7 +153,7 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
 
     # batch_size x batch_size
     similarities = torch.cat(similarities, 1)
-    similarities = similarities * cfg.TRAIN.SMOOTH.GAMMA3
+    #similarities = similarities * cfg.TRAIN.SMOOTH.GAMMA3
     similarities = similarities.detach().cpu().numpy()
 
     #average
