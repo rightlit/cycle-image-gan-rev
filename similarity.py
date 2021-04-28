@@ -260,7 +260,7 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     print(similarities)
     #avg_sim = np.mean(similarities,axis=0)
     #std_sim = np.std(similarities,axis=0)
-    avg_sim_loss = np.mean(similarities,axis=1)
+    avg_sim_loss = np.mean(similarities,axis=0)
     #print('similarities average(total), std: ', avg_sim, std_sim)
     print('similarities loss average(total), loss0, loss1: ', avg_sim_loss[0], avg_sim_loss[1], avg_sim_loss[2])
 
