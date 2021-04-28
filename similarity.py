@@ -270,7 +270,8 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     print('probabilities loss average(total), std: ', avg_prob, std_prob)
     
     #return s_cur_loss, w_cur_loss, t_cur_loss
-    return avg_sim
+    #return avg_sim
+    return avg_sim_loss
 
 
 def build_models():
@@ -417,7 +418,7 @@ if __name__ == "__main__":
         if len(dataloader_val) > 0:
             #s_loss, w_loss, t_loss = evaluate(dataloader_val, image_encoder, text_encoder, batch_size, labels)
             similarities = evaluate(dataloader_val, image_encoder, text_encoder, batch_size, labels)
-        print('similarities : ', similarities)
+        #print('similarities : ', similarities)
 
     except KeyboardInterrupt:
         print('-' * 89)
