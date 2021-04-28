@@ -105,7 +105,8 @@ def sent_probability(cnn_code, rnn_code, labels, class_ids,
     print('probabilities average: ', avg_prob)
     
     #return avg_prob
-    return s_loss.item()
+    #return s_loss.item()
+    return [s_loss.item(), loss0.item(), loss1.item()]
 
 def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch_size):
     """
@@ -264,10 +265,11 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     #print('similarities average(total), std: ', avg_sim, std_sim)
     print('similarities loss average(total), loss0, loss1: ', avg_sim_loss[0], avg_sim_loss[1], avg_sim_loss[2])
 
-    avg_prob = np.mean(probabilities,axis=0)
-    std_prob = np.std(probabilities,axis=0)
+    #avg_prob = np.mean(probabilities,axis=0)
+    #std_prob = np.std(probabilities,axis=0)
+    avg_prob_loss = np.mean(probabilities,axis=0)
     #print('probabilities average(total), std: ', avg_prob, std_prob)
-    print('probabilities loss average(total), std: ', avg_prob, std_prob)
+    print('probabilities loss average(total), loss0, loss1: ', avg_prob_loss[0], avg_prob_loss[1], avg_prob_loss[2])
     
     #return s_cur_loss, w_cur_loss, t_cur_loss
     #return avg_sim
