@@ -96,7 +96,7 @@ def sent_probability(cnn_code, rnn_code, labels, class_ids,
         loss0, loss1 = None, None
     
     s_loss = (loss0 + loss1) * cfg.TRAIN.SMOOTH.LAMBDA   
-    print('s_loss = ', s_loss.item())
+    print('s_loss = ', s_loss.item(), loss0.item(), loss1.item())
 
     #sent_prob = scores0.item()
     sent_prob = scores0.detach().cpu().numpy()
@@ -177,7 +177,7 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
         loss0, loss1 = None, None
     
     w_loss = (loss0 + loss1) * cfg.TRAIN.SMOOTH.LAMBDA   
-    print('w_loss = ', w_loss.item())
+    print('w_loss = ', w_loss.item(), loss0.item(), loss1.item())
 
     #average
     print(similarities)
@@ -186,7 +186,8 @@ def words_similarity(img_features, words_emb, labels, cap_lens, class_ids, batch
     print('similarities average(batch): ', avg_sim)
     
     #return avg_sim
-    return w_loss.item()
+    #return w_loss.item()
+    return [w_loss.item(), loss0.item(), loss1.item()]
 
 def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     cnn_model.eval()
@@ -201,8 +202,8 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     w_total_loss0 = 0
     w_total_loss1 = 0
    
-    #debug_flag = False
-    debug_flag = True
+    debug_flag = False
+    #debug_flag = True
     similarities = []
     probabilities = []
 
@@ -257,10 +258,11 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
 
     # average
     print(similarities)
-    avg_sim = np.mean(similarities,axis=0)
-    std_sim = np.std(similarities,axis=0)
+    #avg_sim = np.mean(similarities,axis=0)
+    #std_sim = np.std(similarities,axis=0)
+    avg_sim_loss = np.mean(similarities,axis=1)
     #print('similarities average(total), std: ', avg_sim, std_sim)
-    print('similarities loss average(total), std: ', avg_sim, std_sim)
+    print('similarities loss average(total), loss0, loss1: ', avg_sim_loss[0], avg_sim_loss[1], avg_sim_loss[2])
 
     avg_prob = np.mean(probabilities,axis=0)
     std_prob = np.std(probabilities,axis=0)
@@ -366,8 +368,8 @@ if __name__ == "__main__":
     # Get data loader ##################################################
     imsize = cfg.TREE.BASE_SIZE * (2 ** (cfg.TREE.BRANCH_NUM-1))
     #batch_size = cfg.TRAIN.BATCH_SIZE
-    batch_size = 10
-    sample_size = 60
+    batch_size = 4
+    sample_size = 10
 
     image_transform = transforms.Compose([
         transforms.Scale(int(imsize * 76 / 64)),
@@ -385,8 +387,8 @@ if __name__ == "__main__":
     #model_type = 'attn'
 
     #cap_indices = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    cap_indices = [0] * sample_size
-    #cap_indices = [2, 1, 3, 7, 3, 6, 2, 1, 6, 5]
+    #cap_indices = [0] * sample_size
+    cap_indices = [2, 1, 3, 7, 3, 6, 2, 1, 6, 5]
     #cap_indices = None
     if(model_type == 'bert'):
         #dataset_val = DevTextBertDataset(cfg.DATA_DIR, 'dev', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
