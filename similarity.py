@@ -263,13 +263,13 @@ def evaluate(dataloader, cnn_model, rnn_model, batch_size, labels):
     #std_sim = np.std(similarities,axis=0)
     avg_sim_loss = np.mean(similarities,axis=0)
     #print('similarities average(total), std: ', avg_sim, std_sim)
-    print('similarities loss average(total), loss0, loss1: ', avg_sim_loss[0], avg_sim_loss[1], avg_sim_loss[2])
+    print('words loss average(total), loss0, loss1: ', avg_sim_loss[0], avg_sim_loss[1], avg_sim_loss[2])
 
     #avg_prob = np.mean(probabilities,axis=0)
     #std_prob = np.std(probabilities,axis=0)
     avg_prob_loss = np.mean(probabilities,axis=0)
     #print('probabilities average(total), std: ', avg_prob, std_prob)
-    print('probabilities loss average(total), loss0, loss1: ', avg_prob_loss[0], avg_prob_loss[1], avg_prob_loss[2])
+    print('sentence loss average(total), loss0, loss1: ', avg_prob_loss[0], avg_prob_loss[1], avg_prob_loss[2])
     
     #return s_cur_loss, w_cur_loss, t_cur_loss
     #return avg_sim
