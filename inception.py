@@ -93,6 +93,11 @@ def inception_score(imgs, cuda=True, batch_size=32, resize=False, splits=1):
 
     # Get predictions
     preds = np.zeros((N, 1000))
+    
+    print('data_path : ', data_path)
+    print('imgs len : ', N)
+    print('batch_size : ', batch_size)
+    print('dataloader : ', len(dataloader))
 
     for i, batch in enumerate(dataloader, 0):
         #batch = batch.transpose(1, 3)
