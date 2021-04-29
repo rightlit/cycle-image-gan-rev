@@ -16,10 +16,13 @@ import argparse
 import torchvision.transforms as transforms
 import torchvision.datasets as dset
 
+from PIL import Image
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Calculate inception score')
     parser.add_argument('--data_dir', dest='data_dir', type=str, default='models/netG_epoch_600')
     parser.add_argument('--batch_size', dest='batch_size', type=int, default=32)
+    parser.add_argument('--splits', dest='splits', type=int, default=1)
     args = parser.parse_args()
     return args
 
@@ -40,7 +43,8 @@ class GeneratedDataset(Dataset):
 
     def __getitem__(self, idx):
         img_name = os.path.join(self.root_dir,self.all_images[idx])
-        image = io.imread(img_name)
+        #image = io.imread(img_name)
+        image = Image.open(img_name)
         sample = image
 
         if self.transform:
@@ -128,9 +132,11 @@ if __name__ == "__main__":
     #data_path = 'models/attn/netG_epoch_150/single'
     data_path = args.data_dir
     batch_size = args.batch_size
+    splits = args.splits
 
     transform=transforms.Compose([
-        transforms.ToTensor(),      
+        transforms.Resize((256, 256)),
+        transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5),  (0.5, 0.5, 0.5)),
      ])
 
@@ -139,4 +145,4 @@ if __name__ == "__main__":
     #img_dset = dset.ImageFolder(root=data_path, transform=transform)
     #imgs = SimpleDataset(img_dset)
 
-    print(inception_score(imgs, batch_size=batch_size))
+    print(inception_score(imgs, batch_size=batch_size, splits=splits))
