@@ -45,7 +45,7 @@ sys.path.append(dir_path)
 
 UPDATE_INTERVAL = 200
 def parse_args():
-    parser = argparse.ArgumentParser(description='Calculate Similarity')
+    parser = argparse.ArgumentParser(description='Calculate R-precision')
     parser.add_argument('--cfg', dest='cfg_file',
                         help='optional config file',
                         default='cfg/STREAM/bird.yaml', type=str)
@@ -61,15 +61,6 @@ def R_precision(dataloader, cnn_model, rnn_model, batch_size, labels):
     cnn_model.eval()
     rnn_model.eval()
 
-    s_total_loss = 0
-    w_total_loss = 0
-    t_total_loss = 0
-
-    s_total_loss0 = 0
-    s_total_loss1 = 0
-    w_total_loss0 = 0
-    w_total_loss1 = 0
-   
     debug_flag = False
     #debug_flag = True
     similarities = []
@@ -120,12 +111,7 @@ def R_precision(dataloader, cnn_model, rnn_model, batch_size, labels):
     A_precision = sum(P_rates) * 1.0 / len(P_rates)
     print('%s average R_precsion is %f | total time: %f' % (step, A_precision, time.time() - start_time))
 
-    # average
-    print(similarities)
-    avg_sim_loss = np.mean(similarities,axis=0)
-    print('words loss average(total), loss0, loss1: ', avg_sim_loss[0], avg_sim_loss[1], avg_sim_loss[2])
-
-    return avg_sim_loss
+    return A_precision
 
 
 def build_models():
