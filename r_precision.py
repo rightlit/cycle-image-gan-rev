@@ -66,6 +66,7 @@ def R_precision(dataloader, cnn_model, rnn_model, batch_size, labels):
     similarities = []
     probabilities = []
     P_rates = []
+    score = 0
 
     for step, data in enumerate(dataloader, 0):
         print('dataloader step : ', step, batch_size)
@@ -84,18 +85,23 @@ def R_precision(dataloader, cnn_model, rnn_model, batch_size, labels):
             words_features, sent_code, word_logits = cnn_model(imgs[-1], captions, cap_lens)
         else:
             words_features, sent_code = cnn_model(imgs[-1])
-        
+
+        print('sent_code : ', sent_code.shape)        
         # nef = words_features.size(1)
         # words_features = words_features.view(batch_size, nef, -1)
 
         hidden = rnn_model.init_hidden(batch_size)
         words_emb, sent_emb = rnn_model(captions, cap_lens, hidden)
+        print('sent_emb : ', sent_emb.shape)        
 
         imgs_cos = []
         for i in range(100):
             image_code = sent_code[i]
             image_code = image_code.unsqueeze(0)
             image_code = image_code.repeat(100, 1)
+            
+            print(image_code.shape, sent_emb.shape)
+
             img_cos = cosine_similarity(image_code, sent_emb)
             img_cos = img_cos
             _, indices = torch.sort(img_cos, descending=True)
