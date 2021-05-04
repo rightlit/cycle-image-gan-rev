@@ -50,6 +50,7 @@ def parse_args():
                         help='optional config file',
                         default='cfg/STREAM/bird.yaml', type=str)
     parser.add_argument('--gpu', dest='gpu_id', type=int, default=0)
+    parser.add_argument('--batch_size', dest='batch_size', type=int, default=1)
     parser.add_argument('--data_dir', dest='data_dir', type=str, default='data/birds')
     parser.add_argument('--model_type', dest='model_type', type=str, default='bert')
     parser.add_argument('--local_pretrained', dest='local_pretrained', type=int, default=0)
@@ -122,7 +123,7 @@ def R_precision(dataloader, cnn_model, rnn_model, batch_size, labels):
     print('P_rates = ', P_rates)
     #A_precision = sum(P_rates) * 1.0 / len(P_rates)
     A_precision = sum(P_rates) * 1.0 / num_images
-    print('%s average R_precsion is %f' % (step, A_precision))
+    print('%d step average R_precsion is %f' % ((step+1), A_precision))
 
     return A_precision
 
@@ -205,6 +206,8 @@ if __name__ == "__main__":
     if(args.local_pretrained == 1):
         cfg.LOCAL_PRETRAINED = True
 
+    batch_size = args.batch_size
+
     ##########################################################################
     now = datetime.datetime.now(dateutil.tz.tzlocal())
     timestamp = now.strftime('%Y_%m_%d_%H_%M_%S')
@@ -222,7 +225,7 @@ if __name__ == "__main__":
     # Get data loader ##################################################
     imsize = cfg.TREE.BASE_SIZE * (2 ** (cfg.TREE.BRANCH_NUM-1))
     #batch_size = cfg.TRAIN.BATCH_SIZE
-    batch_size = 4
+    #batch_size = 4
     sample_size = 10
 
     image_transform = transforms.Compose([
