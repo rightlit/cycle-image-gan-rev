@@ -123,7 +123,7 @@ def R_precision(dataloader, cnn_model, rnn_model, batch_size, labels):
     print('P_rates = ', P_rates)
     #A_precision = sum(P_rates) * 1.0 / len(P_rates)
     A_precision = sum(P_rates) * 1.0 / num_images
-    print('%d step average R_precsion is %f' % ((step+1), A_precision))
+    print('%d images average R_precsion is %f' % (num_images, A_precision))
 
     return A_precision
 
