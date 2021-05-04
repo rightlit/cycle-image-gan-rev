@@ -409,7 +409,7 @@ class TextDataset(Dataset):
                         bbox, self.transform, normalize=self.norm)
         # fix sent_ix for dev
         if(self.split == 'dev'):
-            if(cap_indices == None):
+            if(self.cap_indices == None):
                 sent_ix = 0
             else:
                 sent_ix = self.cap_indices[index]
