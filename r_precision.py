@@ -225,8 +225,10 @@ if __name__ == "__main__":
     # Get data loader ##################################################
     imsize = cfg.TREE.BASE_SIZE * (2 ** (cfg.TREE.BRANCH_NUM-1))
     #batch_size = cfg.TRAIN.BATCH_SIZE
+  
     #batch_size = 4
-    sample_size = 10
+    #sample_size = 10
+    sample_size = 60
 
     image_transform = transforms.Compose([
         transforms.Scale(int(imsize * 76 / 64)),
@@ -244,8 +246,8 @@ if __name__ == "__main__":
     #model_type = 'attn'
 
     #cap_indices = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    #cap_indices = [0] * sample_size
-    cap_indices = [2, 1, 3, 7, 3, 6, 2, 1, 6, 5]
+    cap_indices = [0] * sample_size
+    #cap_indices = [2, 1, 3, 7, 3, 6, 2, 1, 6, 5]
     #cap_indices = None
     if(model_type == 'bert'):
         #dataset_val = DevTextBertDataset(cfg.DATA_DIR, 'dev', base_size=cfg.TREE.BASE_SIZE, transform=image_transform)
