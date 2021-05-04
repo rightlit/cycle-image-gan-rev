@@ -67,6 +67,7 @@ def R_precision(dataloader, cnn_model, rnn_model, batch_size, labels):
     probabilities = []
     P_rates = []
     score = 0
+    num_images = 0
 
     for step, data in enumerate(dataloader, 0):
         print('dataloader step : ', step, batch_size)
@@ -112,11 +113,15 @@ def R_precision(dataloader, cnn_model, rnn_model, batch_size, labels):
                 imgs_cos.append(1)
             else:
                 imgs_cos.append(0)
+
+        num_images = num_images + batch_size
         P_rate = sum(imgs_cos)
         P_rates.append(P_rate)
         print('step: %d | precision: %d' % (step, P_rate))
 
-    A_precision = sum(P_rates) * 1.0 / len(P_rates)
+    print('P_rates = ', P_rates)
+    #A_precision = sum(P_rates) * 1.0 / len(P_rates)
+    A_precision = sum(P_rates) * 1.0 / num_images
     print('%s average R_precsion is %f' % (step, A_precision))
 
     return A_precision
