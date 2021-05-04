@@ -95,12 +95,14 @@ def R_precision(dataloader, cnn_model, rnn_model, batch_size, labels):
         print('sent_emb : ', sent_emb.shape)        
 
         imgs_cos = []
-        for i in range(100):
+        #for i in range(100):
+        for i in range(batch_size):
             image_code = sent_code[i]
             image_code = image_code.unsqueeze(0)
-            image_code = image_code.repeat(100, 1)
-            
-            print(image_code.shape, sent_emb.shape)
+            #print('unsqueeze, image_code : ', image_code.shape)
+            #image_code = image_code.repeat(100, 1)
+            image_code = image_code.repeat(batch_size, 1)
+            #print('repeat, image_code : ', image_code.shape)
 
             img_cos = cosine_similarity(image_code, sent_emb)
             img_cos = img_cos
@@ -115,7 +117,7 @@ def R_precision(dataloader, cnn_model, rnn_model, batch_size, labels):
         print('step: %d | precision: %d' % (step, P_rate))
 
     A_precision = sum(P_rates) * 1.0 / len(P_rates)
-    print('%s average R_precsion is %f | total time: %f' % (step, A_precision, time.time() - start_time))
+    print('%s average R_precsion is %f' % (step, A_precision))
 
     return A_precision
 
