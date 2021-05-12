@@ -449,14 +449,17 @@ if __name__ == '__main__':
             img_list_tensor2 = read_folder(args.fid)
 
             print('Calculating 1st stat ...')
+            #is_mean1, is_std1, _, mu1, sigma1 = \
+            #    is_fid_model.get_score_image_tensor(img_list_tensor1, n_split=10, return_stats=True)
             is_mean1, is_std1, _, mu1, sigma1 = \
-                #is_fid_model.get_score_image_tensor(img_list_tensor1, n_split=10, return_stats=True)
                 is_fid_model.get_score_image_tensor(img_list_tensor1, n_split=10, return_stats=True, batch_size=batch_size)
 
             print('Calculating 2nd stat ...')
+            #is_mean2, is_std2, fid = is_fid_model.get_score_image_tensor(img_list_tensor2, \
+            #                                                             mu1=mu1, sigma1=sigma1, \
+            #                                                             n_split=10)
             is_mean2, is_std2, fid = is_fid_model.get_score_image_tensor(img_list_tensor2, \
                                                                          mu1=mu1, sigma1=sigma1, \
-                                                                         #n_split=10)
                                                                          n_split=10, batch_size=batch_size)
 
             print('1st IS score =', is_mean1, ',', is_std1)
