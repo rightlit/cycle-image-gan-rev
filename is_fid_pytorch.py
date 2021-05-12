@@ -365,6 +365,7 @@ if __name__ == '__main__':
     parser.add_argument('--path', type=str, default='', help='Path to the generated images or to .npz statistic files')
     parser.add_argument('--fid', type=str, default='', help='Path to the generated images or to .npz statistic files')
     parser.add_argument('--save-stats-path', type=str, default='', help='Path to save .npz statistic files')
+    parser.add_argument('--batch-size', type=int, default=32, help='batch size')
     args = parser.parse_args()
 
     # read folder, return torch Tensor in NCHW, normalized
@@ -430,11 +431,13 @@ if __name__ == '__main__':
 
     # if argv have foldername/, calc IS score of pictures in this folder
     elif args.path:
+        batch_size = args.batch_size
 
         if args.fid.endswith('.npz'):
             is_fid_model = ScoreModel(mode=2, stats_file=args.fid, cuda=True)
             img_list_tensor = read_folder(args.path)
-            is_mean, is_std, fid = is_fid_model.get_score_image_tensor(img_list_tensor, n_split=10)
+            #is_mean, is_std, fid = is_fid_model.get_score_image_tensor(img_list_tensor, n_split=10)
+            is_mean, is_std, fid = is_fid_model.get_score_image_tensor(img_list_tensor, n_split=10, batch_size=batch_size)
             print(is_mean, is_std)
             print('FID =', fid)
 
@@ -447,12 +450,14 @@ if __name__ == '__main__':
 
             print('Calculating 1st stat ...')
             is_mean1, is_std1, _, mu1, sigma1 = \
-                is_fid_model.get_score_image_tensor(img_list_tensor1, n_split=10, return_stats=True)
+                #is_fid_model.get_score_image_tensor(img_list_tensor1, n_split=10, return_stats=True)
+                is_fid_model.get_score_image_tensor(img_list_tensor1, n_split=10, return_stats=True, batch_size=batch_size)
 
             print('Calculating 2nd stat ...')
-            is_mean2, is_std2, fid = is_fid_model.get_score_image_tensor(img_list_tensor2,
-                                                                         mu1=mu1, sigma1=sigma1,
-                                                                         n_split=10)
+            is_mean2, is_std2, fid = is_fid_model.get_score_image_tensor(img_list_tensor2, \
+                                                                         mu1=mu1, sigma1=sigma1, \
+                                                                         #n_split=10)
+                                                                         n_split=10, batch_size=batch_size)
 
             print('1st IS score =', is_mean1, ',', is_std1)
             print('2nd IS score =', is_mean2, ',', is_std2)
