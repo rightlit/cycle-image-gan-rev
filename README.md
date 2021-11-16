@@ -5,7 +5,7 @@ This is cycle-image-gan revised version for Google Colab.
 Refer to [https://github.com/suetAndTie/cycle-image-gan](https://github.com/suetAndTie/cycle-image-gan) for original source version, <br>
 it is implementation for the paper [Cycle Text-To-Image GAN with BERT](https://arxiv.org/abs/2003.12137).
 
-I tried another way, Cycle Text-to-Image GAN with local-specific BERT embeddings.
+I tried another way, Cycle Text-to-Image GAN with local-specific BERT embeddings.<br>
 and I wrote about this as a paper for [Master degree's thesis](https://library.konkuk.ac.kr/#/search/detail/2053528).
 
 Refer to troubleshooting [issues](https://github.com/rightlit/cycle-image-gan-rev/issues) while running with original source code. 
