@@ -6,7 +6,7 @@ Refer to [https://github.com/suetAndTie/cycle-image-gan](https://github.com/suet
 it is implementation for the paper [Cycle Text-To-Image GAN with BERT](https://arxiv.org/abs/2003.12137).
 
 I tried another way, Cycle Text-to-Image GAN with local-specific BERT embeddings.<br>
-and I wrote a paper about this research for [Master degree's thesis](https://library.konkuk.ac.kr/#/search/detail/2053528).<br>
+and I wrote a paper about this research for [Master degree's thesis](http://konkuk.dcollection.net/public_resource/pdf/200000489714_20211130104709.pdf).<br>
 you can also get this paper [here](https://github.com/rightlit/cycle-image-gan-rev/blob/main/text2image_using_GAN_with_specific_bert.pdf).
 
 Refer to troubleshooting [issues](https://github.com/rightlit/cycle-image-gan-rev/issues) while running with original source code. 
